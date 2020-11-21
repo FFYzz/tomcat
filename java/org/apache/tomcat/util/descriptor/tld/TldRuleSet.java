@@ -16,16 +16,15 @@
  */
 package org.apache.tomcat.util.descriptor.tld;
 
-import java.lang.reflect.Method;
-
-import javax.servlet.jsp.tagext.TagAttributeInfo;
-import javax.servlet.jsp.tagext.TagVariableInfo;
-import javax.servlet.jsp.tagext.VariableInfo;
-
 import org.apache.tomcat.util.digester.Digester;
 import org.apache.tomcat.util.digester.Rule;
 import org.apache.tomcat.util.digester.RuleSet;
 import org.xml.sax.Attributes;
+
+import javax.servlet.jsp.tagext.TagAttributeInfo;
+import javax.servlet.jsp.tagext.TagVariableInfo;
+import javax.servlet.jsp.tagext.VariableInfo;
+import java.lang.reflect.Method;
 
 /**
  * RulesSet for digesting TLD files.
@@ -145,6 +144,7 @@ public class TldRuleSet implements RuleSet {
 
     private static class TagAttributeRule extends Rule {
         private boolean allowShortNames = false;
+
         @Override
         public void begin(String namespace, String name, Attributes attributes) throws Exception {
             TaglibXml taglibXml = (TaglibXml) digester.peek(digester.getCount() - 1);
@@ -392,7 +392,7 @@ public class TldRuleSet implements RuleSet {
 
         @Override
         public void body(String namespace, String name, String text) throws Exception {
-            if(null != text)
+            if (null != text)
                 text = text.trim();
             boolean value = "true".equalsIgnoreCase(text) || "yes".equalsIgnoreCase(text);
             setter.invoke(digester.peek(), Boolean.valueOf(value));

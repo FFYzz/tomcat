@@ -16,12 +16,12 @@
  */
 package org.apache.tomcat.util.http.parser;
 
+import org.apache.tomcat.util.buf.ByteChunk;
+import org.apache.tomcat.util.buf.MessageBytes;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-
-import org.apache.tomcat.util.buf.ByteChunk;
-import org.apache.tomcat.util.buf.MessageBytes;
 
 public class Host {
 
@@ -34,12 +34,10 @@ public class Host {
      * Parse the given input as an HTTP Host header value.
      *
      * @param mb The host header value
-     *
      * @return The position of ':' that separates the host from the port or -1
-     *         if it is not present
-     *
+     * if it is not present
      * @throws IllegalArgumentException If the host header value is not
-     *         specification compliant
+     *                                  specification compliant
      */
     public static int parse(MessageBytes mb) {
         return parse(new MessageBytesReader(mb));
@@ -50,12 +48,10 @@ public class Host {
      * Parse the given input as an HTTP Host header value.
      *
      * @param string The host header value
-     *
      * @return The position of ':' that separates the host from the port or -1
-     *         if it is not present
-     *
+     * if it is not present
      * @throws IllegalArgumentException If the host header value is not
-     *         specification compliant
+     *                                  specification compliant
      */
     public static int parse(String string) {
         return parse(new StringReader(string));

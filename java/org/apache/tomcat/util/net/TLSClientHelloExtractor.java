@@ -16,18 +16,18 @@
  */
 package org.apache.tomcat.util.net;
 
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.http.parser.HttpParser;
+import org.apache.tomcat.util.net.openssl.ciphers.Cipher;
+import org.apache.tomcat.util.res.StringManager;
+
 import java.io.IOException;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
-import org.apache.tomcat.util.http.parser.HttpParser;
-import org.apache.tomcat.util.net.openssl.ciphers.Cipher;
-import org.apache.tomcat.util.res.StringManager;
 
 /**
  * This class extracts the SNI host name and ALPN protocols from a TLS
@@ -143,16 +143,16 @@ public class TLSClientHelloExtractor {
                 // Extension size is another two bytes
                 char extensionDataSize = netInBuffer.getChar();
                 switch (extensionType) {
-                case TLS_EXTENSION_SERVER_NAME: {
-                    sniValue = readSniExtension(netInBuffer);
-                    break;
-                }
-                case TLS_EXTENSION_ALPN:
-                    readAlpnExtension(netInBuffer, clientRequestedApplicationProtocols);
-                    break;
-                default: {
-                    skipBytes(netInBuffer, extensionDataSize);
-                }
+                    case TLS_EXTENSION_SERVER_NAME: {
+                        sniValue = readSniExtension(netInBuffer);
+                        break;
+                    }
+                    case TLS_EXTENSION_ALPN:
+                        readAlpnExtension(netInBuffer, clientRequestedApplicationProtocols);
+                        break;
+                    default: {
+                        skipBytes(netInBuffer, extensionDataSize);
+                    }
                 }
             }
             result = ExtractorResult.COMPLETE;

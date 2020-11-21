@@ -16,12 +16,12 @@
  */
 package org.apache.coyote.http11.filters;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-
 import org.apache.coyote.Response;
 import org.apache.coyote.http11.HttpOutputBuffer;
 import org.apache.coyote.http11.OutputFilter;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * Identity output filter.

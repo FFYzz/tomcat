@@ -16,6 +16,16 @@
  */
 package org.apache.tomcat.dbcp.dbcp2.datasources;
 
+import org.apache.tomcat.dbcp.dbcp2.Utils;
+import org.apache.tomcat.dbcp.pool2.ObjectPool;
+import org.apache.tomcat.dbcp.pool2.PooledObject;
+import org.apache.tomcat.dbcp.pool2.PooledObjectFactory;
+import org.apache.tomcat.dbcp.pool2.impl.DefaultPooledObject;
+
+import javax.sql.ConnectionEvent;
+import javax.sql.ConnectionEventListener;
+import javax.sql.ConnectionPoolDataSource;
+import javax.sql.PooledConnection;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,17 +34,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import javax.sql.ConnectionEvent;
-import javax.sql.ConnectionEventListener;
-import javax.sql.ConnectionPoolDataSource;
-import javax.sql.PooledConnection;
-
-import org.apache.tomcat.dbcp.dbcp2.Utils;
-import org.apache.tomcat.dbcp.pool2.ObjectPool;
-import org.apache.tomcat.dbcp.pool2.PooledObject;
-import org.apache.tomcat.dbcp.pool2.PooledObjectFactory;
-import org.apache.tomcat.dbcp.pool2.impl.DefaultPooledObject;
 
 /**
  * A {@link PooledObjectFactory} that creates {@link org.apache.tomcat.dbcp.dbcp2.PoolableConnection PoolableConnection}s.
@@ -69,25 +68,19 @@ class CPDSConnectionFactory
     /**
      * Creates a new {@code PoolableConnectionFactory}.
      *
-     * @param cpds
-     *            the ConnectionPoolDataSource from which to obtain PooledConnection's
-     * @param validationQuery
-     *            a query to use to {@link #validateObject validate} {@link Connection}s. Should return at least one
-     *            row. May be {@code null} in which case {@link Connection#isValid(int)} will be used to validate
-     *            connections.
-     * @param validationQueryTimeoutSeconds
-     *            Timeout in seconds before validation fails
-     * @param rollbackAfterValidation
-     *            whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
-     * @param userName
-     *            The user name to use to create connections
-     * @param userPassword
-     *            The password to use to create connections
+     * @param cpds                          the ConnectionPoolDataSource from which to obtain PooledConnection's
+     * @param validationQuery               a query to use to {@link #validateObject validate} {@link Connection}s. Should return at least one
+     *                                      row. May be {@code null} in which case {@link Connection#isValid(int)} will be used to validate
+     *                                      connections.
+     * @param validationQueryTimeoutSeconds Timeout in seconds before validation fails
+     * @param rollbackAfterValidation       whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
+     * @param userName                      The user name to use to create connections
+     * @param userPassword                  The password to use to create connections
      * @since 2.4.0
      */
     public CPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery,
-            final int validationQueryTimeoutSeconds, final boolean rollbackAfterValidation, final String userName,
-            final char[] userPassword) {
+                                 final int validationQueryTimeoutSeconds, final boolean rollbackAfterValidation, final String userName,
+                                 final char[] userPassword) {
         this.cpds = cpds;
         this.validationQuery = validationQuery;
         this.validationQueryTimeoutSeconds = validationQueryTimeoutSeconds;
@@ -99,24 +92,18 @@ class CPDSConnectionFactory
     /**
      * Creates a new {@code PoolableConnectionFactory}.
      *
-     * @param cpds
-     *            the ConnectionPoolDataSource from which to obtain PooledConnection's
-     * @param validationQuery
-     *            a query to use to {@link #validateObject validate} {@link Connection}s. Should return at least one
-     *            row. May be {@code null} in which case {@link Connection#isValid(int)} will be used to validate
-     *            connections.
-     * @param validationQueryTimeoutSeconds
-     *            Timeout in seconds before validation fails
-     * @param rollbackAfterValidation
-     *            whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
-     * @param userName
-     *            The user name to use to create connections
-     * @param userPassword
-     *            The password to use to create connections
+     * @param cpds                          the ConnectionPoolDataSource from which to obtain PooledConnection's
+     * @param validationQuery               a query to use to {@link #validateObject validate} {@link Connection}s. Should return at least one
+     *                                      row. May be {@code null} in which case {@link Connection#isValid(int)} will be used to validate
+     *                                      connections.
+     * @param validationQueryTimeoutSeconds Timeout in seconds before validation fails
+     * @param rollbackAfterValidation       whether a rollback should be issued after {@link #validateObject validating} {@link Connection}s.
+     * @param userName                      The user name to use to create connections
+     * @param userPassword                  The password to use to create connections
      */
     public CPDSConnectionFactory(final ConnectionPoolDataSource cpds, final String validationQuery,
-            final int validationQueryTimeoutSeconds, final boolean rollbackAfterValidation, final String userName,
-            final String userPassword) {
+                                 final int validationQueryTimeoutSeconds, final boolean rollbackAfterValidation, final String userName,
+                                 final String userPassword) {
         this(cpds, validationQuery, validationQueryTimeoutSeconds, rollbackAfterValidation, userName,
                 Utils.toCharArray(userPassword));
     }
@@ -140,9 +127,7 @@ class CPDSConnectionFactory
     }
 
     /**
-     *
-     * @param pool
-     *            the {@link ObjectPool} in which to pool those {@link Connection}s
+     * @param pool the {@link ObjectPool} in which to pool those {@link Connection}s
      */
     public void setPool(final ObjectPool<PooledConnectionAndInfo> pool) {
         this.pool = pool;
@@ -340,18 +325,16 @@ class CPDSConnectionFactory
     /**
      * Sets the database password used when creating new connections.
      *
-     * @param userPassword
-     *            new password
+     * @param userPassword new password
      */
     public synchronized void setPassword(final char[] userPassword) {
-        this.userPassword =  Utils.clone(userPassword);
+        this.userPassword = Utils.clone(userPassword);
     }
 
     /**
      * Sets the database password used when creating new connections.
      *
-     * @param userPassword
-     *            new password
+     * @param userPassword new password
      */
     @Override
     public synchronized void setPassword(final String userPassword) {
@@ -362,8 +345,7 @@ class CPDSConnectionFactory
      * Sets the maximum lifetime in milliseconds of a connection after which the connection will always fail activation,
      * passivation and validation.
      *
-     * @param maxConnLifetimeMillis
-     *            A value of zero or less indicates an infinite lifetime. The default value is -1.
+     * @param maxConnLifetimeMillis A value of zero or less indicates an infinite lifetime. The default value is -1.
      */
     public void setMaxConnLifetimeMillis(final long maxConnLifetimeMillis) {
         this.maxConnLifetimeMillis = maxConnLifetimeMillis;

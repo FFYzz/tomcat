@@ -16,24 +16,19 @@
  */
 package org.apache.el;
 
-import javax.el.ELContext;
-import javax.el.ELResolver;
-import javax.el.ExpressionFactory;
-import javax.el.MethodExpression;
-import javax.el.ValueExpression;
-
 import org.apache.el.lang.ELSupport;
 import org.apache.el.lang.ExpressionBuilder;
 import org.apache.el.stream.StreamELResolverImpl;
 import org.apache.el.util.MessageFactory;
 
+import javax.el.*;
+
 
 /**
- * @see javax.el.ExpressionFactory
- *
  * @author Jacob Hookom [jacob@hookom.net]
+ * @see javax.el.ExpressionFactory
  */
-@aQute.bnd.annotation.spi.ServiceProvider(value=ExpressionFactory.class)
+@aQute.bnd.annotation.spi.ServiceProvider(value = ExpressionFactory.class)
 public class ExpressionFactoryImpl extends ExpressionFactory {
 
     @Override
@@ -43,8 +38,8 @@ public class ExpressionFactoryImpl extends ExpressionFactory {
 
     @Override
     public MethodExpression createMethodExpression(ELContext context,
-            String expression, Class<?> expectedReturnType,
-            Class<?>[] expectedParamTypes) {
+                                                   String expression, Class<?> expectedReturnType,
+                                                   Class<?>[] expectedParamTypes) {
         ExpressionBuilder builder = new ExpressionBuilder(expression, context);
         return builder.createMethodExpression(expectedReturnType,
                 expectedParamTypes);
@@ -52,7 +47,7 @@ public class ExpressionFactoryImpl extends ExpressionFactory {
 
     @Override
     public ValueExpression createValueExpression(ELContext context,
-            String expression, Class<?> expectedType) {
+                                                 String expression, Class<?> expectedType) {
         if (expectedType == null) {
             throw new NullPointerException(MessageFactory
                     .get("error.value.expectedType"));
@@ -63,7 +58,7 @@ public class ExpressionFactoryImpl extends ExpressionFactory {
 
     @Override
     public ValueExpression createValueExpression(Object instance,
-            Class<?> expectedType) {
+                                                 Class<?> expectedType) {
         if (expectedType == null) {
             throw new NullPointerException(MessageFactory
                     .get("error.value.expectedType"));

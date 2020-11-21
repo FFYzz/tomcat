@@ -296,13 +296,24 @@ public class CoyoteAdapter implements Adapter {
     }
 
 
+    /**
+     * 传入 Tomcat 中定义的 Request 与 Response
+     * 调用
+     * @param req The request object
+     * @param res The response object
+     *
+     * @throws Exception
+     */
     @Override
     public void service(org.apache.coyote.Request req, org.apache.coyote.Response res)
             throws Exception {
 
+        // HttpServletRequest
         Request request = (Request) req.getNote(ADAPTER_NOTES);
+        // HttpServletResponse
         Response response = (Response) res.getNote(ADAPTER_NOTES);
 
+        // 设置 Request
         if (request == null) {
             // Create objects
             request = connector.createRequest();

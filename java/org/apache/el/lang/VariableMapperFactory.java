@@ -17,10 +17,10 @@
 
 package org.apache.el.lang;
 
+import org.apache.el.util.MessageFactory;
+
 import javax.el.ValueExpression;
 import javax.el.VariableMapper;
-
-import org.apache.el.util.MessageFactory;
 
 public class VariableMapperFactory extends VariableMapper {
 

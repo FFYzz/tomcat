@@ -1,38 +1,31 @@
 /*
-* Licensed to the Apache Software Foundation (ASF) under one or more
-* contributor license agreements.  See the NOTICE file distributed with
-* this work for additional information regarding copyright ownership.
-* The ASF licenses this file to You under the Apache License, Version 2.0
-* (the "License"); you may not use this file except in compliance with
-* the License.  You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.apache.tomcat.buildutil;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
+
+import java.io.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Ant task to convert a given set of files from Text to HTML.
@@ -44,13 +37,16 @@ import org.apache.tools.ant.types.FileSet;
  * @author Mark Roth
  */
 public class Txt2Html
-    extends Task
-{
+        extends Task {
 
-    /** The directory to contain the resulting files */
+    /**
+     * The directory to contain the resulting files
+     */
     private File todir;
 
-    /** The file to be converted into HTML */
+    /**
+     * The file to be converted into HTML
+     */
     private final List<FileSet> filesets = new LinkedList<>();
 
     /**
@@ -70,7 +66,7 @@ public class Txt2Html
      *
      * @param todir The directory
      */
-    public void setTodir( File todir ) {
+    public void setTodir(File todir) {
         this.todir = todir;
     }
 
@@ -79,20 +75,19 @@ public class Txt2Html
      *
      * @param fs The fileset to be converted.
      */
-    public void addFileset( FileSet fs ) {
-        filesets.add( fs );
+    public void addFileset(FileSet fs) {
+        filesets.add(fs);
     }
 
     /**
      * Perform the conversion
      *
      * @throws BuildException if an error occurs during execution of
-     *    this task.
+     *                        this task.
      */
     @Override
     public void execute()
-        throws BuildException
-    {
+            throws BuildException {
         int count = 0;
 
         // Step through each file and convert.
@@ -117,9 +112,9 @@ public class Txt2Html
                     count++;
                 }
             }
-            if( count > 0 ) {
-                log( "Converted " + count + " file" + (count > 1 ? "s" : "") +
-                    " to " + todir.getAbsolutePath() );
+            if (count > 0) {
+                log("Converted " + count + " file" + (count > 1 ? "s" : "") +
+                        " to " + todir.getAbsolutePath());
             }
         }
     }
@@ -128,12 +123,11 @@ public class Txt2Html
      * Perform the actual copy and conversion
      *
      * @param from The input file
-     * @param to The output file
+     * @param to   The output file
      * @throws IOException Thrown if an error occurs during the conversion
      */
-    private void convert( File from, File to )
-        throws IOException
-    {
+    private void convert(File from, File to)
+            throws IOException {
         // Open files:
         try (BufferedReader in = new BufferedReader(new InputStreamReader(
                 new FileInputStream(from), SOURCE_ENCODING))) {
@@ -142,31 +136,31 @@ public class Txt2Html
 
                 // Output header:
                 out.print("<!DOCTYPE html><html><head><meta charset=\"UTF-8\" />"
-                        + "<title>Source Code</title></head><body><pre>" );
+                        + "<title>Source Code</title></head><body><pre>");
 
                 // Convert, line-by-line:
                 String line;
-                while( (line = in.readLine()) != null ) {
+                while ((line = in.readLine()) != null) {
                     StringBuilder result = new StringBuilder();
                     int len = line.length();
-                    for( int i = 0; i < len; i++ ) {
-                        char c = line.charAt( i );
-                        switch( c ) {
+                    for (int i = 0; i < len; i++) {
+                        char c = line.charAt(i);
+                        switch (c) {
                             case '&':
-                                result.append( "&amp;" );
+                                result.append("&amp;");
                                 break;
                             case '<':
-                                result.append( "&lt;" );
+                                result.append("&lt;");
                                 break;
                             default:
-                                result.append( c );
+                                result.append(c);
                         }
                     }
-                    out.print( result.toString() + LINE_SEPARATOR );
+                    out.print(result.toString() + LINE_SEPARATOR);
                 }
 
                 // Output footer:
-                out.print( "</pre></body></html>" );
+                out.print("</pre></body></html>");
 
             }
         }

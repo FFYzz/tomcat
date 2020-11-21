@@ -16,17 +16,6 @@
  */
 package org.apache.tomcat.websocket.server;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.net.SocketTimeoutException;
-import java.nio.ByteBuffer;
-import java.nio.channels.CompletionHandler;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.TimeUnit;
-
-import javax.websocket.SendHandler;
-import javax.websocket.SendResult;
-
 import org.apache.coyote.http11.upgrade.UpgradeInfo;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
@@ -35,6 +24,16 @@ import org.apache.tomcat.util.net.SocketWrapperBase.BlockingMode;
 import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.websocket.Transformation;
 import org.apache.tomcat.websocket.WsRemoteEndpointImplBase;
+
+import javax.websocket.SendHandler;
+import javax.websocket.SendResult;
+import java.io.EOFException;
+import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.nio.ByteBuffer;
+import java.nio.channels.CompletionHandler;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This is the server side {@link javax.websocket.RemoteEndpoint} implementation
@@ -55,7 +54,7 @@ public class WsRemoteEndpointImplServer extends WsRemoteEndpointImplBase {
     private volatile long timeoutExpiry = -1;
 
     public WsRemoteEndpointImplServer(SocketWrapperBase<?> socketWrapper, UpgradeInfo upgradeInfo,
-            WsServerContainer serverContainer) {
+                                      WsServerContainer serverContainer) {
         this.socketWrapper = socketWrapper;
         this.upgradeInfo = upgradeInfo;
         this.wsWriteTimeout = serverContainer.getTimeout();
@@ -70,7 +69,7 @@ public class WsRemoteEndpointImplServer extends WsRemoteEndpointImplBase {
 
     @Override
     protected void doWrite(SendHandler handler, long blockingWriteTimeoutExpiry,
-            ByteBuffer... buffers) {
+                           ByteBuffer... buffers) {
         if (socketWrapper.hasAsyncIO()) {
             final boolean block = (blockingWriteTimeoutExpiry != -1);
             long timeout = -1;
@@ -107,6 +106,7 @@ public class WsRemoteEndpointImplServer extends WsRemoteEndpointImplBase {
                                 clearHandler(null, true);
                             }
                         }
+
                         @Override
                         public void failed(Throwable exc, Void attachment) {
                             if (block) {
@@ -261,13 +261,12 @@ public class WsRemoteEndpointImplServer extends WsRemoteEndpointImplBase {
 
 
     /**
-     *
-     * @param t             The throwable associated with any error that
-     *                      occurred
-     * @param useDispatch   Should {@link SendHandler#onResult(SendResult)} be
-     *                      called from a new thread, keeping in mind the
-     *                      requirements of
-     *                      {@link javax.websocket.RemoteEndpoint.Async}
+     * @param t           The throwable associated with any error that
+     *                    occurred
+     * @param useDispatch Should {@link SendHandler#onResult(SendResult)} be
+     *                    called from a new thread, keeping in mind the
+     *                    requirements of
+     *                    {@link javax.websocket.RemoteEndpoint.Async}
      */
     private void clearHandler(Throwable t, boolean useDispatch) {
         // Setting the result marks this (partial) message as

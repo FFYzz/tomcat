@@ -17,18 +17,17 @@
 
 package org.apache.jasper.runtime;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * ServletResponseWrapper used by the JSP 'include' action.
- *
+ * <p>
  * This wrapper response object is passed to RequestDispatcher.include(), so
  * that the output of the included resource is appended to that of the
  * including page.
@@ -47,7 +46,7 @@ public class ServletResponseWrapperInclude extends HttpServletResponseWrapper {
 
     public ServletResponseWrapperInclude(ServletResponse response,
                                          JspWriter jspWriter) {
-        super((HttpServletResponse)response);
+        super((HttpServletResponse) response);
         this.printWriter = new PrintWriter(jspWriter);
         this.jspWriter = jspWriter;
     }

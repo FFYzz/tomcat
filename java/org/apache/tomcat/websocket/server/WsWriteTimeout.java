@@ -16,13 +16,13 @@
  */
 package org.apache.tomcat.websocket.server;
 
+import org.apache.tomcat.websocket.BackgroundProcess;
+import org.apache.tomcat.websocket.BackgroundProcessManager;
+
 import java.util.Comparator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.apache.tomcat.websocket.BackgroundProcess;
-import org.apache.tomcat.websocket.BackgroundProcessManager;
 
 /**
  * Provides timeouts for asynchronous web socket writes. On the server side we
@@ -41,7 +41,7 @@ public class WsWriteTimeout implements BackgroundProcess {
     @Override
     public void backgroundProcess() {
         // This method gets called once a second.
-        backgroundProcessCount ++;
+        backgroundProcessCount++;
 
         if (backgroundProcessCount >= processPeriod) {
             backgroundProcessCount = 0;
@@ -71,7 +71,7 @@ public class WsWriteTimeout implements BackgroundProcess {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * The default value is 1 which means asynchronous write timeouts are
      * processed every 1 second.
      */
@@ -111,7 +111,7 @@ public class WsWriteTimeout implements BackgroundProcess {
 
         @Override
         public int compare(WsRemoteEndpointImplServer o1,
-                WsRemoteEndpointImplServer o2) {
+                           WsRemoteEndpointImplServer o2) {
 
             long t1 = o1.getTimeoutExpiry();
             long t2 = o2.getTimeoutExpiry();

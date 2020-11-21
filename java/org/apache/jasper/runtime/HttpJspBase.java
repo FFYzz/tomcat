@@ -17,7 +17,8 @@
 
 package org.apache.jasper.runtime;
 
-import java.io.IOException;
+import org.apache.jasper.Constants;
+import org.apache.jasper.compiler.Localizer;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -25,9 +26,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.HttpJspPage;
-
-import org.apache.jasper.Constants;
-import org.apache.jasper.compiler.Localizer;
+import java.io.IOException;
 
 /**
  * This is the super class of all JSP-generated servlets.
@@ -43,8 +42,7 @@ public abstract class HttpJspBase extends HttpServlet implements HttpJspPage {
 
     @Override
     public final void init(ServletConfig config)
-        throws ServletException
-    {
+            throws ServletException {
         super.init(config);
         jspInit();
         _jspInit();
@@ -66,8 +64,7 @@ public abstract class HttpJspBase extends HttpServlet implements HttpJspPage {
      */
     @Override
     public final void service(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException
-    {
+            throws ServletException, IOException {
         _jspService(request, response);
     }
 
@@ -88,5 +85,5 @@ public abstract class HttpJspBase extends HttpServlet implements HttpJspPage {
     @Override
     public abstract void _jspService(HttpServletRequest request,
                                      HttpServletResponse response)
-        throws ServletException, IOException;
+            throws ServletException, IOException;
 }

@@ -16,6 +16,12 @@
  */
 package org.apache.jasper.compiler;
 
+import org.apache.jasper.JasperException;
+import org.apache.jasper.JspCompilationContext;
+import org.apache.tomcat.Jar;
+import org.apache.tomcat.util.descriptor.tld.*;
+
+import javax.servlet.jsp.tagext.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -23,33 +29,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.jsp.tagext.FunctionInfo;
-import javax.servlet.jsp.tagext.PageData;
-import javax.servlet.jsp.tagext.TagAttributeInfo;
-import javax.servlet.jsp.tagext.TagExtraInfo;
-import javax.servlet.jsp.tagext.TagFileInfo;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
-import javax.servlet.jsp.tagext.TagLibraryValidator;
-import javax.servlet.jsp.tagext.TagVariableInfo;
-import javax.servlet.jsp.tagext.ValidationMessage;
-
-import org.apache.jasper.JasperException;
-import org.apache.jasper.JspCompilationContext;
-import org.apache.tomcat.Jar;
-import org.apache.tomcat.util.descriptor.tld.TagFileXml;
-import org.apache.tomcat.util.descriptor.tld.TagXml;
-import org.apache.tomcat.util.descriptor.tld.TaglibXml;
-import org.apache.tomcat.util.descriptor.tld.TldResourcePath;
-import org.apache.tomcat.util.descriptor.tld.ValidatorXml;
+import java.util.*;
 
 /**
  * Implementation of the TagLibraryInfo class from the JSP spec.
@@ -107,8 +87,8 @@ class TagLibraryInfoImpl extends TagLibraryInfo implements TagConstants {
 
 
     public TagLibraryInfoImpl(JspCompilationContext ctxt, ParserController pc,
-            PageInfo pi, String prefix, String uriIn,
-            TldResourcePath tldResourcePath, ErrorDispatcher err)
+                              PageInfo pi, String prefix, String uriIn,
+                              TldResourcePath tldResourcePath, ErrorDispatcher err)
             throws JasperException {
         super(prefix, uriIn);
 
@@ -242,7 +222,7 @@ class TagLibraryInfoImpl extends TagLibraryInfo implements TagConstants {
      * @return the location of the TLD identified by the uri
      */
     private TldResourcePath generateTldResourcePath(String uri,
-            JspCompilationContext ctxt) throws JasperException {
+                                                    JspCompilationContext ctxt) throws JasperException {
 
         // TODO: this matches the current implementation but the URL logic looks fishy
         // map URI to location per JSP 7.3.6.2
@@ -277,7 +257,7 @@ class TagLibraryInfoImpl extends TagLibraryInfo implements TagConstants {
             }
             return new TldResourcePath(url, uri, "META-INF/taglib.tld");
         } else if (uri.startsWith("/WEB-INF/lib/") || uri.startsWith("/WEB-INF/classes/") ||
-                (uri.startsWith("/WEB-INF/tags/") && uri.endsWith(".tld")&& !uri.endsWith("implicit.tld"))) {
+                (uri.startsWith("/WEB-INF/tags/") && uri.endsWith(".tld") && !uri.endsWith("implicit.tld"))) {
             err.jspError("jsp.error.tld.invalid_tld_file", uri);
         }
         return new TldResourcePath(url, uri);
@@ -379,8 +359,7 @@ class TagLibraryInfoImpl extends TagLibraryInfo implements TagConstants {
      * page. This is a convenience method on the associated TagLibraryValidator
      * class.
      *
-     * @param thePage
-     *            The JSP page object
+     * @param thePage The JSP page object
      * @return A string indicating whether the page is valid or not.
      */
     public ValidationMessage[] validate(PageData thePage) {

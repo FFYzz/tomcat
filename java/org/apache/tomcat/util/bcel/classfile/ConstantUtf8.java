@@ -16,17 +16,17 @@
  */
 package org.apache.tomcat.util.bcel.classfile;
 
+import org.apache.tomcat.util.bcel.Const;
+
 import java.io.DataInput;
 import java.io.IOException;
-
-import org.apache.tomcat.util.bcel.Const;
 
 /**
  * This class is derived from the abstract
  * <A HREF="org.apache.tomcat.util.bcel.classfile.Constant.html">Constant</A> class
  * and represents a reference to a Utf8 encoded string.
  *
- * @see     Constant
+ * @see Constant
  */
 public final class ConstantUtf8 extends Constant {
 

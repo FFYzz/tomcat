@@ -16,13 +16,13 @@
  */
 package org.apache.coyote.http2;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.res.StringManager;
+
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Base class for all streams including the connection (referred to as Stream 0)
@@ -114,9 +114,10 @@ abstract class AbstractStream {
 
     /**
      * Increment window size.
+     *
      * @param increment The amount by which the window size should be increased
      * @throws Http2Exception If the window size is now higher than
-     *  the maximum allowed
+     *                        the maximum allowed
      */
     synchronized void incrementWindowSize(int increment) throws Http2Exception {
         // No need for overflow protection here.

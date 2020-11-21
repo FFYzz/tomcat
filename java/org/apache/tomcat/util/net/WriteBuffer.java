@@ -16,14 +16,14 @@
  */
 package org.apache.tomcat.util.net;
 
+import org.apache.tomcat.util.buf.ByteBufferHolder;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
-
-import org.apache.tomcat.util.buf.ByteBufferHolder;
 
 /**
  * Provides an expandable set of buffers for writes. Non-blocking writes can be
@@ -81,9 +81,8 @@ public class WriteBuffer {
      *
      * @param prefixes The additional ByteBuffers to add to the start of the
      *                 array
-     *
      * @return an array of ByteBuffers from the current WriteBuffer prefixed by
-     *         the provided ByteBuffers
+     * the provided ByteBuffers
      */
     ByteBuffer[] toArray(ByteBuffer... prefixes) {
         List<ByteBuffer> result = new ArrayList<>();

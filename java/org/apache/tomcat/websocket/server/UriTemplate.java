@@ -16,17 +16,10 @@
  */
 package org.apache.tomcat.websocket.server;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import org.apache.tomcat.util.res.StringManager;
 
 import javax.websocket.DeploymentException;
-
-import org.apache.tomcat.util.res.StringManager;
+import java.util.*;
 
 /**
  * Extracts path parameters from URIs used to create web socket connections
@@ -101,9 +94,9 @@ public class UriTemplate {
     }
 
 
-    public Map<String,String> match(UriTemplate candidate) {
+    public Map<String, String> match(UriTemplate candidate) {
 
-        Map<String,String> result = new HashMap<>();
+        Map<String, String> result = new HashMap<>();
 
         // Should not happen but for safety
         if (candidate.getSegmentCount() != getSegmentCount()) {

@@ -16,14 +16,6 @@
  */
 package org.apache.coyote.http11.filters;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.coyote.InputBuffer;
 import org.apache.coyote.Request;
 import org.apache.coyote.http11.Constants;
@@ -32,6 +24,14 @@ import org.apache.tomcat.util.buf.ByteChunk;
 import org.apache.tomcat.util.buf.HexUtils;
 import org.apache.tomcat.util.net.ApplicationBufferHandler;
 import org.apache.tomcat.util.res.StringManager;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Chunked input filter. Parses chunked data according to
@@ -136,7 +136,7 @@ public class ChunkedInputFilter implements InputFilter, ApplicationBufferHandler
     // ----------------------------------------------------------- Constructors
 
     public ChunkedInputFilter(int maxTrailerSize, Set<String> allowedTrailerHeaders,
-            int maxExtensionSize, int maxSwallowSize) {
+                              int maxExtensionSize, int maxSwallowSize) {
         this.trailingHeaders.setLimit(maxTrailerSize);
         this.allowedTrailerHeaders = allowedTrailerHeaders;
         this.maxExtensionSize = maxExtensionSize;
@@ -155,7 +155,7 @@ public class ChunkedInputFilter implements InputFilter, ApplicationBufferHandler
 
         checkError();
 
-        if(needCRLFParse) {
+        if (needCRLFParse) {
             needCRLFParse = false;
             parseCRLF(false);
         }
@@ -303,6 +303,7 @@ public class ChunkedInputFilter implements InputFilter, ApplicationBufferHandler
 
     /**
      * Read bytes from the previous buffer.
+     *
      * @return The byte count which has been read
      * @throws IOException Read error
      */
@@ -321,8 +322,9 @@ public class ChunkedInputFilter implements InputFilter, ApplicationBufferHandler
      * The letters before CRLF or ';' (whatever comes first) must be valid hex
      * digits. We should not parse F23IAMGONNAMESSTHISUP34CRLF as a valid
      * header according to the spec.
+     *
      * @return <code>true</code> if the chunk header has been
-     *  successfully parsed
+     * successfully parsed
      * @throws IOException Read error
      */
     protected boolean parseChunkHeader() throws IOException {
@@ -392,9 +394,9 @@ public class ChunkedInputFilter implements InputFilter, ApplicationBufferHandler
     /**
      * Parse CRLF at end of chunk.
      *
-     * @param   tolerant    Should tolerant parsing (LF and CRLF) be used? This
-     *                      is recommended (RFC2616, section 19.3) for message
-     *                      headers.
+     * @param tolerant Should tolerant parsing (LF and CRLF) be used? This
+     *                 is recommended (RFC2616, section 19.3) for message
+     *                 headers.
      * @throws IOException An error occurred parsing CRLF
      */
     protected void parseCRLF(boolean tolerant) throws IOException {
@@ -431,6 +433,7 @@ public class ChunkedInputFilter implements InputFilter, ApplicationBufferHandler
 
     /**
      * Parse end chunk data.
+     *
      * @throws IOException Error propagation
      */
     protected void parseEndChunk() throws IOException {
@@ -443,14 +446,14 @@ public class ChunkedInputFilter implements InputFilter, ApplicationBufferHandler
 
     private boolean parseHeader() throws IOException {
 
-        Map<String,String> headers = request.getTrailerFields();
+        Map<String, String> headers = request.getTrailerFields();
 
         byte chr = 0;
 
         // Read new bytes if needed
         if (readChunk == null || readChunk.position() >= readChunk.limit()) {
-            if (readBytes() <0) {
-               throwEOFException(sm.getString("chunkedInputFilter.eosTrailer"));
+            if (readBytes() < 0) {
+                throwEOFException(sm.getString("chunkedInputFilter.eosTrailer"));
             }
         }
 
@@ -476,7 +479,7 @@ public class ChunkedInputFilter implements InputFilter, ApplicationBufferHandler
 
             // Read new bytes if needed
             if (readChunk == null || readChunk.position() >= readChunk.limit()) {
-                if (readBytes() <0) {
+                if (readBytes() < 0) {
                     throwEOFException(sm.getString("chunkedInputFilter.eosTrailer"));
                 }
             }
@@ -515,7 +518,7 @@ public class ChunkedInputFilter implements InputFilter, ApplicationBufferHandler
 
                 // Read new bytes if needed
                 if (readChunk == null || readChunk.position() >= readChunk.limit()) {
-                    if (readBytes() <0) {
+                    if (readBytes() < 0) {
                         throwEOFException(sm.getString("chunkedInputFilter.eosTrailer"));
                     }
                 }
@@ -525,7 +528,7 @@ public class ChunkedInputFilter implements InputFilter, ApplicationBufferHandler
                     readChunk.position(readChunk.position() + 1);
                     // If we swallow whitespace, make sure it counts towards the
                     // limit placed on trailing header size
-                    int newlimit = trailingHeaders.getLimit() -1;
+                    int newlimit = trailingHeaders.getLimit() - 1;
                     if (trailingHeaders.getEnd() > newlimit) {
                         throwIOException(sm.getString("chunkedInputFilter.maxTrailer"));
                     }
@@ -541,7 +544,7 @@ public class ChunkedInputFilter implements InputFilter, ApplicationBufferHandler
 
                 // Read new bytes if needed
                 if (readChunk == null || readChunk.position() >= readChunk.limit()) {
-                    if (readBytes() <0) {
+                    if (readBytes() < 0) {
                         throwEOFException(sm.getString("chunkedInputFilter.eosTrailer"));
                     }
                 }
@@ -567,7 +570,7 @@ public class ChunkedInputFilter implements InputFilter, ApplicationBufferHandler
 
             // Read new bytes if needed
             if (readChunk == null || readChunk.position() >= readChunk.limit()) {
-                if (readBytes() <0) {
+                if (readBytes() < 0) {
                     throwEOFException(sm.getString("chunkedInputFilter.eosTrailer"));
                 }
             }

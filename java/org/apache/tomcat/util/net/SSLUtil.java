@@ -16,11 +16,10 @@
  */
 package org.apache.tomcat.util.net;
 
-import java.util.List;
-
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLSessionContext;
 import javax.net.ssl.TrustManager;
+import java.util.List;
 
 /**
  * Provides a common interface for {@link SSLImplementation}s to create the
@@ -44,10 +43,9 @@ public interface SSLUtil {
      * returned array.
      *
      * @return The protocols currently enabled and available for clients to
-     *         select from for the associated connection
-     *
-     * @throws IllegalArgumentException  If there is no intersection between the
-     *         implemented and configured protocols
+     * select from for the associated connection
+     * @throws IllegalArgumentException If there is no intersection between the
+     *                                  implemented and configured protocols
      */
     public String[] getEnabledProtocols() throws IllegalArgumentException;
 
@@ -60,10 +58,9 @@ public interface SSLUtil {
      * the {@link #getEnabledProtocols()} and the certificates.
      *
      * @return The ciphers currently enabled and available for clients to select
-     *         from for the associated connection
-     *
-     * @throws IllegalArgumentException  If there is no intersection between the
-     *         implemented and configured ciphers
+     * from for the associated connection
+     * @throws IllegalArgumentException If there is no intersection between the
+     *                                  implemented and configured ciphers
      */
     public String[] getEnabledCiphers() throws IllegalArgumentException;
 
@@ -75,6 +72,7 @@ public interface SSLUtil {
     public interface ProtocolInfo {
         /**
          * ALPN information.
+         *
          * @return the protocol selected using ALPN
          */
         public String getNegotiatedProtocol();

@@ -16,21 +16,15 @@
  */
 package org.apache.catalina.ssi;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.regex.Matcher;
-
 import org.apache.catalina.util.Strftime;
 import org.apache.catalina.util.URLEncoder;
 import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.util.security.Escape;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.regex.Matcher;
 
 /**
  * Allows the different SSICommand implementations to share data/talk to each
@@ -61,11 +55,11 @@ public class SSIMediator {
     protected final long lastModifiedDate;
     protected Strftime strftime;
     protected final SSIConditionalState conditionalState = new SSIConditionalState();
-    protected  int lastMatchCount = 0;
+    protected int lastMatchCount = 0;
 
 
     public SSIMediator(SSIExternalResolver ssiExternalResolver,
-            long lastModifiedDate) {
+                       long lastModifiedDate) {
         this.ssiExternalResolver = ssiExternalResolver;
         this.lastModifiedDate = lastModifiedDate;
         setConfigTimeFmt(DEFAULT_CONFIG_TIME_FMT, true);
@@ -195,6 +189,7 @@ public class SSIMediator {
     /**
      * Applies variable substitution to the specified String and returns the
      * new resolved string.
+     *
      * @param val The value which should be checked
      * @return the value after variable substitution
      */
@@ -224,7 +219,7 @@ public class SSIMediator {
             }
         }
 
-        for (int i = 0; i < sb.length();) {
+        for (int i = 0; i < sb.length(); ) {
             // Find the next $
             for (; i < sb.length(); i++) {
                 if (sb.charAt(i) == '$') {

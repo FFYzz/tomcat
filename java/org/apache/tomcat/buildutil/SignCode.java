@@ -1,45 +1,20 @@
 /*
-* Licensed to the Apache Software Foundation (ASF) under one or more
-* contributor license agreements.  See the NOTICE file distributed with
-* this work for additional information regarding copyright ownership.
-* The ASF licenses this file to You under the Apache License, Version 2.0
-* (the "License"); you may not use this file except in compliance with
-* the License.  You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.tomcat.buildutil;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
-
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPConnection;
-import javax.xml.soap.SOAPConnectionFactory;
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.SOAPPart;
 
 import org.apache.tomcat.util.buf.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -49,6 +24,16 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import javax.xml.soap.*;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Ant task that submits a file to the Digicert (formally Symantec) code-signing
@@ -240,7 +225,7 @@ public class SignCode extends Task {
         }
 
         if (!signingService.contains("TEST") && !"SIGNED".equals(signingSetStatus) ||
-                signingService.contains("TEST") && !"INITIALIZED".equals(signingSetStatus) ) {
+                signingService.contains("TEST") && !"INITIALIZED".equals(signingSetStatus)) {
             throw new BuildException("Signing failed. Status was: " + signingSetStatus);
         }
 
@@ -312,15 +297,15 @@ public class SignCode extends Task {
         SOAPPart soapPart = message.getSOAPPart();
         SOAPEnvelope envelope = soapPart.getEnvelope();
         envelope.addNamespaceDeclaration(
-                "soapenv","http://schemas.xmlsoap.org/soap/envelope/");
+                "soapenv", "http://schemas.xmlsoap.org/soap/envelope/");
         envelope.addNamespaceDeclaration(
-                namespace,"http://api.ws.symantec.com/webtrust/codesigningservice");
+                namespace, "http://api.ws.symantec.com/webtrust/codesigningservice");
         return envelope.getBody();
     }
 
 
     private static void addCredentials(SOAPElement requestSigningRequest,
-            String user, String pwd, String code) throws SOAPException {
+                                       String user, String pwd, String code) throws SOAPException {
         SOAPElement authToken = requestSigningRequest.addChildElement("authToken", NS);
         SOAPElement userName = authToken.addChildElement("userName", NS);
         userName.addTextNode(user);
@@ -379,7 +364,7 @@ public class SignCode extends Task {
                     ZipEntry zipEntry = new ZipEntry(fileNames.get(i));
                     zos.putNextEntry(zipEntry);
                     int numRead;
-                    while ( (numRead = fis.read(buf)) >= 0) {
+                    while ((numRead = fis.read(buf)) >= 0) {
                         zos.write(buf, 0, numRead);
                     }
                 }

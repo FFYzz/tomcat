@@ -16,13 +16,12 @@
  */
 package org.apache.jasper.compiler;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /*
  * The BoM detection is derived from:
@@ -34,6 +33,7 @@ import javax.xml.stream.XMLStreamReader;
 class EncodingDetector {
 
     private static final XMLInputFactory XML_INPUT_FACTORY;
+
     static {
         XML_INPUT_FACTORY = XMLInputFactory.newInstance();
     }
@@ -202,7 +202,7 @@ class EncodingDetector {
         public final String encoding;
         public final int skip;
 
-        public BomResult(String encoding,  int skip) {
+        public BomResult(String encoding, int skip) {
             this.encoding = encoding;
             this.skip = skip;
         }

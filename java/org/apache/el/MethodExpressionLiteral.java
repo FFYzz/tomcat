@@ -17,17 +17,16 @@
 
 package org.apache.el;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import org.apache.el.util.ReflectionUtil;
 
 import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.MethodExpression;
 import javax.el.MethodInfo;
-
-import org.apache.el.util.ReflectionUtil;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 
 
 public class MethodExpressionLiteral extends MethodExpression implements Externalizable {
@@ -43,7 +42,7 @@ public class MethodExpressionLiteral extends MethodExpression implements Externa
     }
 
     public MethodExpressionLiteral(String expr, Class<?> expectedType,
-            Class<?>[] paramTypes) {
+                                   Class<?>[] paramTypes) {
         this.expr = expr;
         this.expectedType = expectedType;
         this.paramTypes = paramTypes;

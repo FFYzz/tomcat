@@ -16,18 +16,12 @@
  */
 package org.apache.tomcat.util.http.fileupload.servlet;
 
+import org.apache.tomcat.util.http.fileupload.*;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.FileItemFactory;
-import org.apache.tomcat.util.http.fileupload.FileItemIterator;
-import org.apache.tomcat.util.http.fileupload.FileUpload;
-import org.apache.tomcat.util.http.fileupload.FileUploadBase;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 
 
 /**
@@ -58,9 +52,8 @@ public class ServletFileUpload extends FileUpload {
      * content.
      *
      * @param request The servlet request to be evaluated. Must be non-null.
-     *
      * @return {@code true} if the request is multipart;
-     *         {@code false} otherwise.
+     * {@code false} otherwise.
      */
     public static final boolean isMultipartContent(
             HttpServletRequest request) {
@@ -87,8 +80,8 @@ public class ServletFileUpload extends FileUpload {
      * Constructs an instance of this class which uses the supplied factory to
      * create {@code FileItem} instances.
      *
-     * @see FileUpload#FileUpload()
      * @param fileItemFactory The factory to use for creating file items.
+     * @see FileUpload#FileUpload()
      */
     public ServletFileUpload(FileItemFactory fileItemFactory) {
         super(fileItemFactory);
@@ -101,12 +94,9 @@ public class ServletFileUpload extends FileUpload {
      * compliant {@code multipart/form-data} stream.
      *
      * @param request The servlet request to be parsed.
-     *
      * @return A map of {@code FileItem} instances parsed from the request.
-     *
      * @throws FileUploadException if there are problems reading/parsing
      *                             the request or storing files.
-     *
      * @since 1.3
      */
     public Map<String, List<FileItem>> parseParameterMap(HttpServletRequest request)
@@ -119,19 +109,17 @@ public class ServletFileUpload extends FileUpload {
      * compliant {@code multipart/form-data} stream.
      *
      * @param request The servlet request to be parsed.
-     *
      * @return An iterator to instances of {@code FileItemStream}
-     *         parsed from the request, in the order that they were
-     *         transmitted.
-     *
+     * parsed from the request, in the order that they were
+     * transmitted.
      * @throws FileUploadException if there are problems reading/parsing
      *                             the request or storing files.
-     * @throws IOException An I/O error occurred. This may be a network
-     *   error while communicating with the client or a problem while
-     *   storing the uploaded content.
+     * @throws IOException         An I/O error occurred. This may be a network
+     *                             error while communicating with the client or a problem while
+     *                             storing the uploaded content.
      */
     public FileItemIterator getItemIterator(HttpServletRequest request)
-    throws FileUploadException, IOException {
+            throws FileUploadException, IOException {
         return super.getItemIterator(new ServletRequestContext(request));
     }
 

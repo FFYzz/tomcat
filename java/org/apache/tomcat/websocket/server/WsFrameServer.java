@@ -16,10 +16,6 @@
  */
 package org.apache.tomcat.websocket.server;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-
 import org.apache.coyote.http11.upgrade.UpgradeInfo;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
@@ -32,6 +28,10 @@ import org.apache.tomcat.websocket.WsFrameBase;
 import org.apache.tomcat.websocket.WsIOException;
 import org.apache.tomcat.websocket.WsSession;
 
+import java.io.EOFException;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
 public class WsFrameServer extends WsFrameBase {
 
     private final Log log = LogFactory.getLog(WsFrameServer.class); // must not be static
@@ -43,7 +43,7 @@ public class WsFrameServer extends WsFrameBase {
 
 
     public WsFrameServer(SocketWrapperBase<?> socketWrapper, UpgradeInfo upgradeInfo, WsSession wsSession,
-            Transformation transformation, ClassLoader applicationClassLoader) {
+                         Transformation transformation, ClassLoader applicationClassLoader) {
         super(wsSession, transformation);
         this.socketWrapper = socketWrapper;
         this.upgradeInfo = upgradeInfo;
@@ -154,24 +154,24 @@ public class WsFrameServer extends WsFrameBase {
     SocketState notifyDataAvailable() throws IOException {
         while (isOpen()) {
             switch (getReadState()) {
-            case WAITING:
-                if (!changeReadState(ReadState.WAITING, ReadState.PROCESSING)) {
-                    continue;
-                }
-                try {
-                    return doOnDataAvailable();
-                } catch (IOException e) {
-                    changeReadState(ReadState.CLOSING);
-                    throw e;
-                }
-            case SUSPENDING_WAIT:
-                if (!changeReadState(ReadState.SUSPENDING_WAIT, ReadState.SUSPENDED)) {
-                    continue;
-                }
-                return SocketState.SUSPENDED;
-            default:
-                throw new IllegalStateException(
-                        sm.getString("wsFrameServer.illegalReadState", getReadState()));
+                case WAITING:
+                    if (!changeReadState(ReadState.WAITING, ReadState.PROCESSING)) {
+                        continue;
+                    }
+                    try {
+                        return doOnDataAvailable();
+                    } catch (IOException e) {
+                        changeReadState(ReadState.CLOSING);
+                        throw e;
+                    }
+                case SUSPENDING_WAIT:
+                    if (!changeReadState(ReadState.SUSPENDING_WAIT, ReadState.SUSPENDED)) {
+                        continue;
+                    }
+                    return SocketState.SUSPENDED;
+                default:
+                    throw new IllegalStateException(
+                            sm.getString("wsFrameServer.illegalReadState", getReadState()));
             }
         }
 
@@ -183,19 +183,19 @@ public class WsFrameServer extends WsFrameBase {
         onDataAvailable();
         while (isOpen()) {
             switch (getReadState()) {
-            case PROCESSING:
-                if (!changeReadState(ReadState.PROCESSING, ReadState.WAITING)) {
-                    continue;
-                }
-                return SocketState.UPGRADED;
-            case SUSPENDING_PROCESS:
-                if (!changeReadState(ReadState.SUSPENDING_PROCESS, ReadState.SUSPENDED)) {
-                    continue;
-                }
-                return SocketState.SUSPENDED;
-            default:
-                throw new IllegalStateException(
-                        sm.getString("wsFrameServer.illegalReadState", getReadState()));
+                case PROCESSING:
+                    if (!changeReadState(ReadState.PROCESSING, ReadState.WAITING)) {
+                        continue;
+                    }
+                    return SocketState.UPGRADED;
+                case SUSPENDING_PROCESS:
+                    if (!changeReadState(ReadState.SUSPENDING_PROCESS, ReadState.SUSPENDED)) {
+                        continue;
+                    }
+                    return SocketState.SUSPENDED;
+                default:
+                    throw new IllegalStateException(
+                            sm.getString("wsFrameServer.illegalReadState", getReadState()));
             }
         }
 

@@ -16,15 +16,7 @@
  */
 package org.apache.catalina.ha.session;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
-import org.apache.catalina.Cluster;
-import org.apache.catalina.Context;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.Loader;
-import org.apache.catalina.SessionIdGenerator;
-import org.apache.catalina.Valve;
+import org.apache.catalina.*;
 import org.apache.catalina.ha.CatalinaCluster;
 import org.apache.catalina.ha.ClusterManager;
 import org.apache.catalina.ha.tcp.ReplicationValve;
@@ -33,6 +25,9 @@ import org.apache.catalina.tribes.io.ReplicationStream;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.collections.SynchronizedStack;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 public abstract class ClusterManagerBase extends ManagerBase implements ClusterManager {
 
@@ -51,7 +46,7 @@ public abstract class ClusterManagerBase extends ManagerBase implements ClusterM
     /**
      * cached replication valve cluster container!
      */
-    private volatile ReplicationValve replicationValve = null ;
+    private volatile ReplicationValve replicationValve = null;
 
     /**
      * send all actions of session attributes.
@@ -106,9 +101,9 @@ public abstract class ClusterManagerBase extends ManagerBase implements ClusterM
             classLoader = tccl;
         }
         if (classLoader == tccl) {
-            return new ClassLoader[] {classLoader};
+            return new ClassLoader[]{classLoader};
         } else {
-            return new ClassLoader[] {classLoader, tccl};
+            return new ClassLoader[]{classLoader, tccl};
         }
     }
 
@@ -119,7 +114,7 @@ public abstract class ClusterManagerBase extends ManagerBase implements ClusterM
 
     @Override
     public ReplicationStream getReplicationStream(byte[] data) throws IOException {
-        return getReplicationStream(data,0,data.length);
+        return getReplicationStream(data, 0, data.length);
     }
 
     @Override
@@ -175,26 +170,27 @@ public abstract class ClusterManagerBase extends ManagerBase implements ClusterM
 
     /**
      * Register cross context session at replication valve thread local
+     *
      * @param session cross context session
      */
     protected void registerSessionAtReplicationValve(DeltaSession session) {
-        if(replicationValve == null) {
-            CatalinaCluster cluster = getCluster() ;
-            if(cluster != null) {
+        if (replicationValve == null) {
+            CatalinaCluster cluster = getCluster();
+            if (cluster != null) {
                 Valve[] valves = cluster.getValves();
-                if(valves != null && valves.length > 0) {
-                    for(int i=0; replicationValve == null && i < valves.length ; i++ ){
-                        if(valves[i] instanceof ReplicationValve) replicationValve =
-                                (ReplicationValve)valves[i] ;
+                if (valves != null && valves.length > 0) {
+                    for (int i = 0; replicationValve == null && i < valves.length; i++) {
+                        if (valves[i] instanceof ReplicationValve) replicationValve =
+                                (ReplicationValve) valves[i];
                     }//for
 
-                    if(replicationValve == null && log.isDebugEnabled()) {
+                    if (replicationValve == null && log.isDebugEnabled()) {
                         log.debug("no ReplicationValve found for CrossContext Support");
                     }//endif
                 }//end if
             }//endif
         }//end if
-        if(replicationValve != null) {
+        if (replicationValve != null) {
             replicationValve.registerReplicationSession(session);
         }
     }
@@ -205,7 +201,7 @@ public abstract class ClusterManagerBase extends ManagerBase implements ClusterM
         if (getCluster() == null) {
             Cluster cluster = getContext().getCluster();
             if (cluster instanceof CatalinaCluster) {
-                setCluster((CatalinaCluster)cluster);
+                setCluster((CatalinaCluster) cluster);
             }
         }
         if (cluster != null) cluster.registerManager(this);

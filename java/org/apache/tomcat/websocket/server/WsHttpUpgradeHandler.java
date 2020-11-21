@@ -16,19 +16,6 @@
  */
 package org.apache.tomcat.websocket.server;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.WebConnection;
-import javax.websocket.CloseReason;
-import javax.websocket.CloseReason.CloseCodes;
-import javax.websocket.DeploymentException;
-import javax.websocket.Endpoint;
-import javax.websocket.Extension;
-import javax.websocket.server.ServerEndpointConfig;
-
 import org.apache.coyote.http11.upgrade.InternalHttpUpgradeHandler;
 import org.apache.coyote.http11.upgrade.UpgradeInfo;
 import org.apache.juli.logging.Log;
@@ -41,6 +28,18 @@ import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.websocket.Transformation;
 import org.apache.tomcat.websocket.WsIOException;
 import org.apache.tomcat.websocket.WsSession;
+
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.WebConnection;
+import javax.websocket.CloseReason;
+import javax.websocket.CloseReason.CloseCodes;
+import javax.websocket.DeploymentException;
+import javax.websocket.Endpoint;
+import javax.websocket.Extension;
+import javax.websocket.server.ServerEndpointConfig;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Servlet 3.1 HTTP upgrade handler for WebSocket connections.
@@ -62,7 +61,7 @@ public class WsHttpUpgradeHandler implements InternalHttpUpgradeHandler {
     private List<Extension> negotiatedExtensions;
     private String subProtocol;
     private Transformation transformation;
-    private Map<String,String> pathParameters;
+    private Map<String, String> pathParameters;
     private boolean secure;
     private WebConnection connection;
 
@@ -83,10 +82,10 @@ public class WsHttpUpgradeHandler implements InternalHttpUpgradeHandler {
 
 
     public void preInit(Endpoint ep, ServerEndpointConfig serverEndpointConfig,
-            WsServerContainer wsc, WsHandshakeRequest handshakeRequest,
-            List<Extension> negotiatedExtensionsPhase2, String subProtocol,
-            Transformation transformation, Map<String,String> pathParameters,
-            boolean secure) {
+                        WsServerContainer wsc, WsHandshakeRequest handshakeRequest,
+                        List<Extension> negotiatedExtensionsPhase2, String subProtocol,
+                        Transformation transformation, Map<String, String> pathParameters,
+                        boolean secure) {
         this.ep = ep;
         this.serverEndpointConfig = serverEndpointConfig;
         this.webSocketContainer = wsc;
@@ -108,7 +107,7 @@ public class WsHttpUpgradeHandler implements InternalHttpUpgradeHandler {
 
         String httpSessionId = null;
         Object session = handshakeRequest.getHttpSession();
-        if (session != null ) {
+        if (session != null) {
             httpSessionId = ((HttpSession) session).getId();
         }
 

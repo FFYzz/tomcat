@@ -16,13 +16,6 @@
  */
 package org.apache.coyote.http2;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.CompletionHandler;
-import java.util.concurrent.TimeUnit;
-
-import javax.servlet.http.WebConnection;
-
 import org.apache.coyote.ProtocolException;
 import org.apache.tomcat.util.net.SocketEvent;
 import org.apache.tomcat.util.net.SocketWrapperBase;
@@ -30,6 +23,12 @@ import org.apache.tomcat.util.net.SocketWrapperBase.BlockingMode;
 import org.apache.tomcat.util.net.SocketWrapperBase.CompletionCheck;
 import org.apache.tomcat.util.net.SocketWrapperBase.CompletionHandlerCall;
 import org.apache.tomcat.util.net.SocketWrapperBase.CompletionState;
+
+import javax.servlet.http.WebConnection;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.CompletionHandler;
+import java.util.concurrent.TimeUnit;
 
 class Http2AsyncParser extends Http2Parser {
 
@@ -182,7 +181,7 @@ class Http2AsyncParser extends Http2Parser {
 
         @Override
         public CompletionHandlerCall callHandler(CompletionState state,
-                ByteBuffer[] buffers, int offset, int length) {
+                                                 ByteBuffer[] buffers, int offset, int length) {
             if (offset != 0 || length != 2) {
                 try {
                     throw new IllegalArgumentException(sm.getString("http2Parser.invalidBuffers"));
@@ -242,38 +241,38 @@ class Http2AsyncParser extends Http2Parser {
                             swallow(streamId, payloadSize, false, payload);
                         } else {
                             switch (frameType) {
-                            case DATA:
-                                readDataFrame(streamId, flags, payloadSize, payload);
-                                break;
-                            case HEADERS:
-                                readHeadersFrame(streamId, flags, payloadSize, payload);
-                                break;
-                            case PRIORITY:
-                                readPriorityFrame(streamId, payload);
-                                break;
-                            case RST:
-                                readRstFrame(streamId, payload);
-                                break;
-                            case SETTINGS:
-                                readSettingsFrame(flags, payloadSize, payload);
-                                break;
-                            case PUSH_PROMISE:
-                                readPushPromiseFrame(streamId, payload);
-                                break;
-                            case PING:
-                                readPingFrame(flags, payload);
-                                break;
-                            case GOAWAY:
-                                readGoawayFrame(payloadSize, payload);
-                                break;
-                            case WINDOW_UPDATE:
-                                readWindowUpdateFrame(streamId, payload);
-                                break;
-                            case CONTINUATION:
-                                readContinuationFrame(streamId, flags, payloadSize, payload);
-                                break;
-                            case UNKNOWN:
-                                readUnknownFrame(streamId, frameType, flags, payloadSize, payload);
+                                case DATA:
+                                    readDataFrame(streamId, flags, payloadSize, payload);
+                                    break;
+                                case HEADERS:
+                                    readHeadersFrame(streamId, flags, payloadSize, payload);
+                                    break;
+                                case PRIORITY:
+                                    readPriorityFrame(streamId, payload);
+                                    break;
+                                case RST:
+                                    readRstFrame(streamId, payload);
+                                    break;
+                                case SETTINGS:
+                                    readSettingsFrame(flags, payloadSize, payload);
+                                    break;
+                                case PUSH_PROMISE:
+                                    readPushPromiseFrame(streamId, payload);
+                                    break;
+                                case PING:
+                                    readPingFrame(flags, payload);
+                                    break;
+                                case GOAWAY:
+                                    readGoawayFrame(payloadSize, payload);
+                                    break;
+                                case WINDOW_UPDATE:
+                                    readWindowUpdateFrame(streamId, payload);
+                                    break;
+                                case CONTINUATION:
+                                    readContinuationFrame(streamId, flags, payloadSize, payload);
+                                    break;
+                                case UNKNOWN:
+                                    readUnknownFrame(streamId, frameType, flags, payloadSize, payload);
                             }
                         }
                         // See if there is a new 9 byte header and continue parsing if possible

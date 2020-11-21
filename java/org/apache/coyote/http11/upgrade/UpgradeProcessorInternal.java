@@ -16,11 +16,6 @@
  */
 package org.apache.coyote.http11.upgrade;
 
-import java.io.IOException;
-
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletOutputStream;
-
 import org.apache.coyote.UpgradeToken;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
@@ -29,6 +24,10 @@ import org.apache.tomcat.util.net.SSLSupport;
 import org.apache.tomcat.util.net.SocketEvent;
 import org.apache.tomcat.util.net.SocketWrapperBase;
 
+import javax.servlet.ServletInputStream;
+import javax.servlet.ServletOutputStream;
+import java.io.IOException;
+
 public class UpgradeProcessorInternal extends UpgradeProcessorBase {
 
     private static final Log log = LogFactory.getLog(UpgradeProcessorInternal.class);
@@ -36,7 +35,7 @@ public class UpgradeProcessorInternal extends UpgradeProcessorBase {
     private final InternalHttpUpgradeHandler internalHttpUpgradeHandler;
 
     public UpgradeProcessorInternal(SocketWrapperBase<?> wrapper, UpgradeToken upgradeToken,
-            UpgradeGroupInfo upgradeGroupInfo) {
+                                    UpgradeGroupInfo upgradeGroupInfo) {
         super(upgradeToken);
         this.internalHttpUpgradeHandler = (InternalHttpUpgradeHandler) upgradeToken.getHttpUpgradeHandler();
         /*

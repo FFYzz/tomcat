@@ -17,28 +17,17 @@
 
 package org.apache.jasper.el;
 
+import org.apache.jasper.runtime.ExceptionUtils;
+import org.apache.jasper.runtime.JspRuntimeLibrary;
+
+import javax.el.*;
+import javax.servlet.jsp.el.ImplicitObjectELResolver;
+import javax.servlet.jsp.el.ScopedAttributeELResolver;
 import java.beans.FeatureDescriptor;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.el.ArrayELResolver;
-import javax.el.BeanELResolver;
-import javax.el.CompositeELResolver;
-import javax.el.ELContext;
-import javax.el.ELException;
-import javax.el.ELResolver;
-import javax.el.ListELResolver;
-import javax.el.MapELResolver;
-import javax.el.PropertyNotFoundException;
-import javax.el.ResourceBundleELResolver;
-import javax.el.StaticFieldELResolver;
-import javax.servlet.jsp.el.ImplicitObjectELResolver;
-import javax.servlet.jsp.el.ScopedAttributeELResolver;
-
-import org.apache.jasper.runtime.ExceptionUtils;
-import org.apache.jasper.runtime.JspRuntimeLibrary;
 
 /**
  * Jasper-specific CompositeELResolver that optimizes certain functions to avoid
@@ -53,7 +42,7 @@ public class JasperELResolver extends CompositeELResolver {
     private final int appResolversSize;
 
     public JasperELResolver(List<ELResolver> appResolvers,
-            ELResolver streamResolver) {
+                            ELResolver streamResolver) {
         appResolversSize = appResolvers.size();
         resolvers = new ELResolver[appResolversSize + STANDARD_RESOLVERS_COUNT];
 
@@ -94,7 +83,7 @@ public class JasperELResolver extends CompositeELResolver {
 
     @Override
     public Object getValue(ELContext context, Object base, Object property)
-        throws NullPointerException, PropertyNotFoundException, ELException {
+            throws NullPointerException, PropertyNotFoundException, ELException {
         context.setPropertyResolved(false);
 
         int start;
@@ -133,7 +122,7 @@ public class JasperELResolver extends CompositeELResolver {
 
     @Override
     public Object invoke(ELContext context, Object base, Object method,
-            Class<?>[] paramTypes, Object[] params) {
+                         Class<?>[] paramTypes, Object[] params) {
         String targetMethod = coerceToString(method);
         if (targetMethod.length() == 0) {
             throw new ELException(new NoSuchMethodException());
@@ -193,7 +182,7 @@ public class JasperELResolver extends CompositeELResolver {
 
         @Override
         public Object getValue(ELContext context, Object base,
-                Object property) {
+                               Object property) {
             Object value = null;
             Method method = getReadMethod(base.getClass(), property.toString());
             if (method != null) {
@@ -211,7 +200,7 @@ public class JasperELResolver extends CompositeELResolver {
 
         @Override
         public void setValue(ELContext context, Object base, Object property,
-                Object value) {
+                             Object value) {
             if (base == null) {
                 return;
             }
@@ -229,7 +218,7 @@ public class JasperELResolver extends CompositeELResolver {
 
         @Override
         public boolean isReadOnly(ELContext context, Object base,
-                Object property) {
+                                  Object property) {
             Class<?> beanClass = base.getClass();
             String prop = property.toString();
             return (getReadMethod(beanClass, prop) != null)
@@ -271,7 +260,7 @@ public class JasperELResolver extends CompositeELResolver {
 
         @Override
         public Class<?> getType(ELContext context, Object base,
-                Object property) {
+                                Object property) {
             return null;
         }
 

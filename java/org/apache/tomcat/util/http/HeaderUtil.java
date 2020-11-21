@@ -27,9 +27,8 @@ public class HeaderUtil {
      * @param bytes  Contains an HTTP header line
      * @param offset The start position of the header line in the array
      * @param len    The length of the HTTP header line
-     *
      * @return A String with non-printing characters replaced by the 0xNN
-     *         equivalent
+     * equivalent
      */
     public static String toPrintableString(byte[] bytes, int offset, int len) {
         StringBuilder result = new StringBuilder();

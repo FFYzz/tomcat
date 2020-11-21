@@ -16,22 +16,16 @@
  */
 package org.apache.naming.factory;
 
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Set;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.Name;
-import javax.naming.NamingException;
-import javax.naming.RefAddr;
-import javax.naming.Reference;
-import javax.naming.spi.ObjectFactory;
-
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.naming.LookupRef;
 import org.apache.naming.StringManager;
+
+import javax.naming.*;
+import javax.naming.spi.ObjectFactory;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Set;
 
 /**
  * Object factory for lookups.
@@ -56,7 +50,7 @@ public class LookupFactory implements ObjectFactory {
      */
     @Override
     public Object getObjectInstance(Object obj, Name name, Context nameCtx,
-            Hashtable<?, ?> environment) throws Exception {
+                                    Hashtable<?, ?> environment) throws Exception {
 
         String lookupName = null;
         Object result = null;

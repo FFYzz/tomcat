@@ -16,55 +16,6 @@
  */
 package org.apache.tomcat.websocket;
 
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.ProxySelector;
-import java.net.SocketAddress;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousChannelGroup;
-import java.nio.channels.AsynchronousSocketChannel;
-import java.nio.charset.StandardCharsets;
-import java.security.KeyStore;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.TrustManagerFactory;
-import javax.websocket.ClientEndpoint;
-import javax.websocket.ClientEndpointConfig;
-import javax.websocket.CloseReason;
-import javax.websocket.CloseReason.CloseCodes;
-import javax.websocket.DeploymentException;
-import javax.websocket.Endpoint;
-import javax.websocket.Extension;
-import javax.websocket.HandshakeResponse;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
-
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.InstanceManager;
@@ -75,11 +26,25 @@ import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.util.security.KeyStoreUtil;
 import org.apache.tomcat.websocket.pojo.PojoEndpointClient;
 
+import javax.net.ssl.*;
+import javax.websocket.*;
+import javax.websocket.CloseReason.CloseCodes;
+import java.io.*;
+import java.net.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousChannelGroup;
+import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyStore;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.*;
+
 public class WsWebSocketContainer implements WebSocketContainer, BackgroundProcess {
 
     private static final StringManager sm = StringManager.getManager(WsWebSocketContainer.class);
     private static final Random RANDOM = new Random();
-    private static final byte[] CRLF = new byte[] { 13, 10 };
+    private static final byte[] CRLF = new byte[]{13, 10};
 
     private static final byte[] GET_BYTES = "GET ".getBytes(StandardCharsets.ISO_8859_1);
     private static final byte[] ROOT_URI_BYTES = "/".getBytes(StandardCharsets.ISO_8859_1);
@@ -93,7 +58,7 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
     // Server side uses the endpoint path as the key
     // Client side uses the client endpoint instance
     private final Map<Object, Set<WsSession>> endpointSessionMap = new HashMap<>();
-    private final Map<WsSession,WsSession> sessions = new ConcurrentHashMap<>();
+    private final Map<WsSession, WsSession> sessions = new ConcurrentHashMap<>();
     private final Object endPointSessionMapLock = new Object();
 
     private long defaultAsyncTimeout = -1;
@@ -174,7 +139,7 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
 
     @Override
     public Session connectToServer(Class<? extends Endpoint> clazz,
-            ClientEndpointConfig clientEndpointConfiguration, URI path)
+                                   ClientEndpointConfig clientEndpointConfiguration, URI path)
             throws DeploymentException {
 
         Endpoint endpoint;
@@ -192,14 +157,14 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
 
     @Override
     public Session connectToServer(Endpoint endpoint,
-            ClientEndpointConfig clientEndpointConfiguration, URI path)
+                                   ClientEndpointConfig clientEndpointConfiguration, URI path)
             throws DeploymentException {
         return connectToServerRecursive(endpoint, clientEndpointConfiguration, path, new HashSet<>());
     }
 
     private Session connectToServerRecursive(Endpoint endpoint,
-            ClientEndpointConfig clientEndpointConfiguration, URI path,
-            Set<URI> redirectSet)
+                                             ClientEndpointConfig clientEndpointConfiguration, URI path,
+                                             Set<URI> redirectSet)
             throws DeploymentException {
 
         if (log.isDebugEnabled()) {
@@ -288,7 +253,7 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
                     "wsWebSocketContainer.asynchronousSocketChannelFail"), ioe);
         }
 
-        Map<String,Object> userProperties = clientEndpointConfiguration.getUserProperties();
+        Map<String, Object> userProperties = clientEndpointConfiguration.getUserProperties();
 
         // Get the connection timeout
         long timeout = Constants.IO_TIMEOUT_MS_DEFAULT;
@@ -372,7 +337,7 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
             }
 
             if (httpResponse.status != 101) {
-                if(isRedirectStatus(httpResponse.status)){
+                if (isRedirectStatus(httpResponse.status)) {
                     List<String> locationHeader =
                             httpResponse.getHandshakeResponse().getHeaders().get(
                                     Constants.LOCATION_HEADER_NAME);
@@ -408,9 +373,7 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
 
                     return connectToServerRecursive(endpoint, clientEndpointConfiguration, redirectLocation, redirectSet);
 
-                }
-
-                else if (httpResponse.status == 401) {
+                } else if (httpResponse.status == 401) {
 
                     if (userProperties.get(Constants.AUTHORIZATION_HEADER_NAME) != null) {
                         throw new DeploymentException(sm.getString(
@@ -508,7 +471,7 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
 
         WsSession wsSession = new WsSession(endpoint, wsRemoteEndpointClient,
                 this, null, null, null, null, null, extensionsAgreed,
-                subProtocol, Collections.<String,String>emptyMap(), secure,
+                subProtocol, Collections.<String, String>emptyMap(), secure,
                 clientEndpointConfiguration);
 
         WsFrameClient wsFrameClient = new WsFrameClient(response, channel,
@@ -537,7 +500,7 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
 
 
     private static void writeRequest(AsyncChannelWrapper channel, ByteBuffer request,
-            long timeout) throws TimeoutException, InterruptedException, ExecutionException {
+                                     long timeout) throws TimeoutException, InterruptedException, ExecutionException {
         int toWrite = request.limit();
 
         Future<Integer> fWrite = channel.write(request);
@@ -557,16 +520,16 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
         boolean isRedirect = false;
 
         switch (httpResponseCode) {
-        case Constants.MULTIPLE_CHOICES:
-        case Constants.MOVED_PERMANENTLY:
-        case Constants.FOUND:
-        case Constants.SEE_OTHER:
-        case Constants.USE_PROXY:
-        case Constants.TEMPORARY_REDIRECT:
-            isRedirect = true;
-            break;
-        default:
-            break;
+            case Constants.MULTIPLE_CHOICES:
+            case Constants.MOVED_PERMANENTLY:
+            case Constants.FOUND:
+            case Constants.SEE_OTHER:
+            case Constants.USE_PROXY:
+            case Constants.TEMPORARY_REDIRECT:
+                isRedirect = true;
+                break;
+            default:
+                break;
         }
 
         return isRedirect;
@@ -642,7 +605,7 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
     }
 
     private static Map<String, List<String>> createRequestHeaders(String host, int port,
-            boolean secure, ClientEndpointConfig clientEndpointConfiguration) {
+                                                                  boolean secure, ClientEndpointConfig clientEndpointConfiguration) {
 
         Map<String, List<String>> headers = new HashMap<>();
         List<Extension> extensions = clientEndpointConfiguration.getExtensions();
@@ -728,7 +691,7 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
     }
 
 
-    private static ByteBuffer createRequest(URI uri, Map<String,List<String>> reqHeaders) {
+    private static ByteBuffer createRequest(URI uri, Map<String, List<String>> reqHeaders) {
         ByteBuffer result = ByteBuffer.allocate(4 * 1024);
 
         // Request line
@@ -793,17 +756,18 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
 
     /**
      * Process response, blocking until HTTP response has been fully received.
+     *
      * @throws ExecutionException
      * @throws InterruptedException
      * @throws DeploymentException
      * @throws TimeoutException
      */
     private HttpResponse processResponse(ByteBuffer response,
-            AsyncChannelWrapper channel, long timeout) throws InterruptedException,
+                                         AsyncChannelWrapper channel, long timeout) throws InterruptedException,
             ExecutionException, DeploymentException, EOFException,
             TimeoutException {
 
-        Map<String,List<String>> headers = new CaseInsensitiveKeyMap<>();
+        Map<String, List<String>> headers = new CaseInsensitiveKeyMap<>();
 
         int status = 0;
         boolean readStatus = false;
@@ -870,7 +834,7 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
     }
 
 
-    private void parseHeaders(String line, Map<String,List<String>> headers) {
+    private void parseHeaders(String line, Map<String, List<String>> headers) {
         // Treat headers as single values by default.
 
         int index = line.indexOf(':');
@@ -909,7 +873,7 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
     }
 
 
-    private SSLEngine createSSLEngine(Map<String,Object> userProperties, String host, int port)
+    private SSLEngine createSSLEngine(Map<String, Object> userProperties, String host, int port)
             throws DeploymentException {
 
         try {
@@ -1011,7 +975,7 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Currently, this implementation does not support any extensions.
      */
     @Override
@@ -1022,7 +986,7 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * The default value for this implementation is -1.
      */
     @Override
@@ -1033,7 +997,7 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * The default value for this implementation is -1.
      */
     @Override
@@ -1094,7 +1058,7 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
     @Override
     public void backgroundProcess() {
         // This method gets called once a second.
-        backgroundProcessCount ++;
+        backgroundProcessCount++;
         if (backgroundProcessCount >= processPeriod) {
             backgroundProcessCount = 0;
 
@@ -1114,7 +1078,7 @@ public class WsWebSocketContainer implements WebSocketContainer, BackgroundProce
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * The default value is 10 which means session expirations are processed
      * every 10 seconds.
      */

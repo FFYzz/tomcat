@@ -16,22 +16,21 @@
  */
 package org.apache.tomcat.websocket.pojo;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.nio.ByteBuffer;
+import org.apache.tomcat.util.ExceptionUtils;
+import org.apache.tomcat.websocket.WrappedMessageHandler;
 
 import javax.websocket.EncodeException;
 import javax.websocket.MessageHandler;
 import javax.websocket.RemoteEndpoint;
 import javax.websocket.Session;
-
-import org.apache.tomcat.util.ExceptionUtils;
-import org.apache.tomcat.websocket.WrappedMessageHandler;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
 
 /**
  * Common implementation code for the POJO message handlers.
  *
- * @param <T>   The type of message to handle
+ * @param <T> The type of message to handle
  */
 public abstract class PojoMessageHandlerBase<T>
         implements WrappedMessageHandler {
@@ -46,8 +45,8 @@ public abstract class PojoMessageHandlerBase<T>
     protected final long maxMessageSize;
 
     public PojoMessageHandlerBase(Object pojo, Method method,
-            Session session, Object[] params, int indexPayload, boolean convert,
-            int indexSession, long maxMessageSize) {
+                                  Session session, Object[] params, int indexPayload, boolean convert,
+                                  int indexSession, long maxMessageSize) {
         this.pojo = pojo;
         this.method = method;
         // TODO: The method should already be accessible here but the following

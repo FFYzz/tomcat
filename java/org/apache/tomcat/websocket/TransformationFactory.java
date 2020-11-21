@@ -16,11 +16,10 @@
  */
 package org.apache.tomcat.websocket;
 
-import java.util.List;
+import org.apache.tomcat.util.res.StringManager;
 
 import javax.websocket.Extension;
-
-import org.apache.tomcat.util.res.StringManager;
+import java.util.List;
 
 public class TransformationFactory {
 
@@ -37,7 +36,7 @@ public class TransformationFactory {
     }
 
     public Transformation create(String name, List<List<Extension.Parameter>> preferences,
-            boolean isServer) {
+                                 boolean isServer) {
         if (PerMessageDeflate.NAME.equals(name)) {
             return PerMessageDeflate.negotiate(preferences, isServer);
         }

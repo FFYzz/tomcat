@@ -16,39 +16,6 @@
  */
 package org.apache.jasper.servlet;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Enumeration;
-import java.util.EventListener;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterRegistration;
-import javax.servlet.FilterRegistration.Dynamic;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
-import javax.servlet.SessionCookieConfig;
-import javax.servlet.SessionTrackingMode;
-import javax.servlet.descriptor.JspConfigDescriptor;
-
 import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
 import org.apache.jasper.compiler.Localizer;
@@ -61,6 +28,18 @@ import org.apache.tomcat.util.descriptor.web.WebXmlParser;
 import org.apache.tomcat.util.scan.JarFactory;
 import org.apache.tomcat.util.scan.StandardJarScanFilter;
 import org.apache.tomcat.util.scan.StandardJarScanner;
+
+import javax.servlet.*;
+import javax.servlet.FilterRegistration.Dynamic;
+import javax.servlet.descriptor.JspConfigDescriptor;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -79,13 +58,13 @@ public class JspCServletContext implements ServletContext {
     /**
      * Servlet context attributes.
      */
-    private final Map<String,Object> myAttributes;
+    private final Map<String, Object> myAttributes;
 
 
     /**
      * Servlet context initialization parameters.
      */
-    private final Map<String,String> myParameters = new ConcurrentHashMap<>();
+    private final Map<String, String> myParameters = new ConcurrentHashMap<>();
 
 
     /**
@@ -123,16 +102,16 @@ public class JspCServletContext implements ServletContext {
     /**
      * Create a new instance of this ServletContext implementation.
      *
-     * @param aLogWriter PrintWriter which is used for <code>log()</code> calls
+     * @param aLogWriter       PrintWriter which is used for <code>log()</code> calls
      * @param aResourceBaseURL Resource base URL
-     * @param classLoader   Class loader for this {@link ServletContext}
-     * @param validate      Should a validating parser be used to parse web.xml?
-     * @param blockExternal Should external entities be blocked when parsing
-     *                      web.xml?
+     * @param classLoader      Class loader for this {@link ServletContext}
+     * @param validate         Should a validating parser be used to parse web.xml?
+     * @param blockExternal    Should external entities be blocked when parsing
+     *                         web.xml?
      * @throws JasperException An error occurred building the merged web.xml
      */
     public JspCServletContext(PrintWriter aLogWriter, URL aResourceBaseURL,
-            ClassLoader classLoader, boolean validate, boolean blockExternal)
+                              ClassLoader classLoader, boolean validate, boolean blockExternal)
             throws JasperException {
 
         myAttributes = new HashMap<>();
@@ -370,9 +349,8 @@ public class JspCServletContext implements ServletContext {
      * specified context-relative path.
      *
      * @param path Context-relative path of the desired resource
-     *
-     * @exception MalformedURLException if the resource path is
-     *  not properly formed
+     * @throws MalformedURLException if the resource path is
+     *                               not properly formed
      */
     @Override
     public URL getResource(String path) throws MalformedURLException {
@@ -465,8 +443,8 @@ public class JspCServletContext implements ServletContext {
                 try (Jar jar = JarFactory.newInstance(jarUrl)) {
                     jar.nextEntry();
                     for (String entryName = jar.getEntryName();
-                            entryName != null;
-                            jar.nextEntry(), entryName = jar.getEntryName()) {
+                         entryName != null;
+                         jar.nextEntry(), entryName = jar.getEntryName()) {
                         if (entryName.startsWith(jarPath) &&
                                 entryName.length() > jarPath.length()) {
                             // Let the Set implementation handle duplicates
@@ -503,7 +481,6 @@ public class JspCServletContext implements ServletContext {
      * Return a null reference for the specified servlet name.
      *
      * @param name Name of the requested servlet
-     *
      * @deprecated This method has been deprecated with no replacement
      */
     @Override
@@ -561,8 +538,7 @@ public class JspCServletContext implements ServletContext {
      * Log the specified message and exception.
      *
      * @param exception The exception to be logged
-     * @param message The message to be logged
-     *
+     * @param message   The message to be logged
      * @deprecated Use log(String,Throwable) instead
      */
     @Override
@@ -575,7 +551,7 @@ public class JspCServletContext implements ServletContext {
     /**
      * Log the specified message and exception.
      *
-     * @param message The message to be logged
+     * @param message   The message to be logged
      * @param exception The exception to be logged
      */
     @Override
@@ -599,7 +575,7 @@ public class JspCServletContext implements ServletContext {
     /**
      * Set or replace the specified context attribute.
      *
-     * @param name Name of the context attribute to set
+     * @param name  Name of the context attribute to set
      * @param value Corresponding attribute value
      */
     @Override
@@ -610,14 +586,14 @@ public class JspCServletContext implements ServletContext {
 
     @Override
     public FilterRegistration.Dynamic addFilter(String filterName,
-            String className) {
+                                                String className) {
         return null;
     }
 
 
     @Override
     public ServletRegistration.Dynamic addServlet(String servletName,
-            String className) {
+                                                  String className) {
         return null;
     }
 
@@ -655,21 +631,21 @@ public class JspCServletContext implements ServletContext {
 
     @Override
     public Dynamic addFilter(String filterName,
-            Class<? extends Filter> filterClass) {
+                             Class<? extends Filter> filterClass) {
         return null;
     }
 
 
     @Override
     public ServletRegistration.Dynamic addServlet(String servletName,
-            Servlet servlet) {
+                                                  Servlet servlet) {
         return null;
     }
 
 
     @Override
     public ServletRegistration.Dynamic addServlet(String servletName,
-            Class<? extends Servlet> servletClass) {
+                                                  Class<? extends Servlet> servletClass) {
         return null;
     }
 

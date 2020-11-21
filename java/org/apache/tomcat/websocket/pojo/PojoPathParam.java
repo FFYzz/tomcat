@@ -16,10 +16,10 @@
  */
 package org.apache.tomcat.websocket.pojo;
 
-import javax.websocket.DeploymentException;
-
 import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.websocket.Util;
+
+import javax.websocket.DeploymentException;
 
 /**
  * Stores the parameter type and name for a parameter that needs to be passed to
@@ -37,7 +37,7 @@ public class PojoPathParam {
     private final String name;
 
 
-    public PojoPathParam(Class<?> type, String name)  throws DeploymentException {
+    public PojoPathParam(Class<?> type, String name) throws DeploymentException {
         if (name != null) {
             // Annotated as @PathParam so validate type
             validateType(type);

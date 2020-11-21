@@ -16,19 +16,14 @@
  */
 package org.apache.tomcat.dbcp.dbcp2;
 
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.DriverPropertyInfo;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
+import org.apache.tomcat.dbcp.pool2.ObjectPool;
+
+import java.sql.*;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Logger;
-
-import org.apache.tomcat.dbcp.pool2.ObjectPool;
 
 /**
  * A {@link Driver} implementation that obtains {@link Connection}s from a registered {@link ObjectPool}.
@@ -46,10 +41,14 @@ public class PoolingDriver implements Driver {
         }
     }
 
-    /** The map of registered pools. */
+    /**
+     * The map of registered pools.
+     */
     protected static final HashMap<String, ObjectPool<? extends Connection>> pools = new HashMap<>();
 
-    /** Controls access to the underlying connection */
+    /**
+     * Controls access to the underlying connection
+     */
     private final boolean accessToUnderlyingConnectionAllowed;
 
     /**
@@ -62,8 +61,7 @@ public class PoolingDriver implements Driver {
     /**
      * For unit testing purposes.
      *
-     * @param accessToUnderlyingConnectionAllowed
-     *            Do {@link DelegatingConnection}s created by this driver permit access to the delegate?
+     * @param accessToUnderlyingConnectionAllowed Do {@link DelegatingConnection}s created by this driver permit access to the delegate?
      */
     protected PoolingDriver(final boolean accessToUnderlyingConnectionAllowed) {
         this.accessToUnderlyingConnectionAllowed = accessToUnderlyingConnectionAllowed;
@@ -81,11 +79,9 @@ public class PoolingDriver implements Driver {
     /**
      * Gets the connection pool for the given name.
      *
-     * @param name
-     *            The pool name
+     * @param name The pool name
      * @return The pool
-     * @throws SQLException
-     *             Thrown when the named pool is not registered.
+     * @throws SQLException Thrown when the named pool is not registered.
      */
     public synchronized ObjectPool<? extends Connection> getConnectionPool(final String name) throws SQLException {
         final ObjectPool<? extends Connection> pool = pools.get(name);
@@ -98,10 +94,8 @@ public class PoolingDriver implements Driver {
     /**
      * Registers a named pool.
      *
-     * @param name
-     *            The pool name.
-     * @param pool
-     *            The pool.
+     * @param name The pool name.
+     * @param pool The pool.
      */
     public synchronized void registerPool(final String name, final ObjectPool<? extends Connection> pool) {
         pools.put(name, pool);
@@ -110,10 +104,8 @@ public class PoolingDriver implements Driver {
     /**
      * Closes a named pool.
      *
-     * @param name
-     *            The pool name.
-     * @throws SQLException
-     *             Thrown when a problem is caught closing the pool.
+     * @param name The pool name.
+     * @throws SQLException Thrown when a problem is caught closing the pool.
      */
     public synchronized void closePool(final String name) throws SQLException {
         final ObjectPool<? extends Connection> pool = pools.get(name);
@@ -174,17 +166,14 @@ public class PoolingDriver implements Driver {
     /**
      * Invalidates the given connection.
      *
-     * @param conn
-     *            connection to invalidate
-     * @throws SQLException
-     *             if the connection is not a <code>PoolGuardConnectionWrapper</code> or an error occurs invalidating
-     *             the connection
+     * @param conn connection to invalidate
+     * @throws SQLException if the connection is not a <code>PoolGuardConnectionWrapper</code> or an error occurs invalidating
+     *                      the connection
      */
     public void invalidateConnection(final Connection conn) throws SQLException {
         if (conn instanceof PoolGuardConnectionWrapper) { // normal case
             final PoolGuardConnectionWrapper pgconn = (PoolGuardConnectionWrapper) conn;
-            @SuppressWarnings("unchecked")
-            final ObjectPool<Connection> pool = (ObjectPool<Connection>) pgconn.pool;
+            @SuppressWarnings("unchecked") final ObjectPool<Connection> pool = (ObjectPool<Connection>) pgconn.pool;
             try {
                 pool.invalidateObject(pgconn.getDelegateInternal());
             } catch (final Exception e) {
@@ -215,7 +204,9 @@ public class PoolingDriver implements Driver {
         return new DriverPropertyInfo[0];
     }
 
-    /** My URL prefix */
+    /**
+     * My URL prefix
+     */
     public static final String URL_PREFIX = "jdbc:apache:commons:dbcp:";
     protected static final int URL_PREFIX_LEN = URL_PREFIX.length();
 

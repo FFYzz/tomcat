@@ -21,8 +21,6 @@ import org.apache.tomcat.util.res.StringManager;
 /**
  * Defines timing options for responding to requests that contain a
  * '100-continue' expectations.
- *
- *
  */
 public enum ContinueResponseTiming {
 
@@ -56,7 +54,7 @@ public enum ContinueResponseTiming {
 
     private static final StringManager sm = StringManager.getManager(ContinueResponseTiming.class);
 
-    public static  ContinueResponseTiming fromString(String value) {
+    public static ContinueResponseTiming fromString(String value) {
         /*
          * Do this for two reasons:
          * - Not all of the Enum values are intended to be used in configuration

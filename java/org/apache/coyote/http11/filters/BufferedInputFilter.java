@@ -17,16 +17,16 @@
 
 package org.apache.coyote.http11.filters;
 
-import java.io.IOException;
-import java.nio.BufferOverflowException;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-
 import org.apache.coyote.InputBuffer;
 import org.apache.coyote.Request;
 import org.apache.coyote.http11.InputFilter;
 import org.apache.tomcat.util.buf.ByteChunk;
 import org.apache.tomcat.util.net.ApplicationBufferHandler;
+
+import java.io.IOException;
+import java.nio.BufferOverflowException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Input filter responsible for reading and buffering the request body, so that
@@ -89,7 +89,7 @@ public class BufferedInputFilter implements InputFilter, ApplicationBufferHandle
                 buffered.limit(buffered.position()).reset();
                 tempRead = null;
             }
-        } catch(IOException | BufferOverflowException ioe) {
+        } catch (IOException | BufferOverflowException ioe) {
             // No need for i18n - this isn't going to get logged anywhere
             throw new IllegalStateException(
                     "Request body too large for buffer");

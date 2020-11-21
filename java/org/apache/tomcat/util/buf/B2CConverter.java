@@ -16,18 +16,14 @@
  */
 package org.apache.tomcat.util.buf;
 
+import org.apache.tomcat.util.res.StringManager;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CoderResult;
-import java.nio.charset.CodingErrorAction;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.*;
 import java.util.Locale;
-
-import org.apache.tomcat.util.res.StringManager;
 
 /**
  * NIO based character decoder.
@@ -46,9 +42,7 @@ public class B2CConverter {
      * Obtain the Charset for the given encoding
      *
      * @param enc The name of the encoding for the required charset
-     *
      * @return The Charset corresponding to the requested encoding
-     *
      * @throws UnsupportedEncodingException If the requested Charset is not
      *                                      available
      */
@@ -113,10 +107,9 @@ public class B2CConverter {
     /**
      * Convert the given bytes to characters.
      *
-     * @param bc byte input
-     * @param cc char output
-     * @param endOfInput    Is this all of the available data
-     *
+     * @param bc         byte input
+     * @param cc         char output
+     * @param endOfInput Is this all of the available data
      * @throws IOException If the conversion can not be completed
      */
     public void convert(ByteChunk bc, CharChunk cc, boolean endOfInput)
@@ -182,11 +175,10 @@ public class B2CConverter {
     /**
      * Convert the given bytes to characters.
      *
-     * @param bc byte input
-     * @param cc char output
-     * @param ic byte input channel
-     * @param endOfInput    Is this all of the available data
-     *
+     * @param bc         byte input
+     * @param cc         char output
+     * @param ic         byte input channel
+     * @param endOfInput Is this all of the available data
      * @throws IOException If the conversion can not be completed
      */
     public void convert(ByteBuffer bc, CharBuffer cc, ByteChunk.ByteInputChannel ic, boolean endOfInput)

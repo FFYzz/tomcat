@@ -16,11 +16,10 @@
  */
 package org.apache.tomcat.util.modeler;
 
+import javax.management.MBeanNotificationInfo;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import javax.management.MBeanNotificationInfo;
 
 /**
  * <p>Internal configuration information for a <code>Notification</code>
@@ -112,6 +111,7 @@ public class NotificationInfo extends FeatureInfo {
     /**
      * Create and return a <code>ModelMBeanNotificationInfo</code> object that
      * corresponds to the attribute described by this instance.
+     *
      * @return the notification info
      */
     public MBeanNotificationInfo createNotificationInfo() {
@@ -122,7 +122,7 @@ public class NotificationInfo extends FeatureInfo {
 
         // Create and return a new information object
         info = new MBeanNotificationInfo
-            (getNotifTypes(), getName(), getDescription());
+                (getNotifTypes(), getName(), getDescription());
         //Descriptor descriptor = info.getDescriptor();
         //addFields(descriptor);
         //info.setDescriptor(descriptor);

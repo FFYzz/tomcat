@@ -16,6 +16,20 @@
  */
 package org.apache.coyote.ajp;
 
+import org.apache.coyote.*;
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.ExceptionUtils;
+import org.apache.tomcat.util.buf.ByteChunk;
+import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.http.MimeHeaders;
+import org.apache.tomcat.util.net.AbstractEndpoint.Handler.SocketState;
+import org.apache.tomcat.util.net.ApplicationBufferHandler;
+import org.apache.tomcat.util.net.SSLSupport;
+import org.apache.tomcat.util.net.SocketWrapperBase;
+import org.apache.tomcat.util.res.StringManager;
+
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
@@ -29,28 +43,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.coyote.AbstractProcessor;
-import org.apache.coyote.ActionCode;
-import org.apache.coyote.Adapter;
-import org.apache.coyote.ContinueResponseTiming;
-import org.apache.coyote.ErrorState;
-import org.apache.coyote.InputBuffer;
-import org.apache.coyote.OutputBuffer;
-import org.apache.coyote.RequestInfo;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
-import org.apache.tomcat.util.ExceptionUtils;
-import org.apache.tomcat.util.buf.ByteChunk;
-import org.apache.tomcat.util.buf.MessageBytes;
-import org.apache.tomcat.util.http.MimeHeaders;
-import org.apache.tomcat.util.net.AbstractEndpoint.Handler.SocketState;
-import org.apache.tomcat.util.net.ApplicationBufferHandler;
-import org.apache.tomcat.util.net.SSLSupport;
-import org.apache.tomcat.util.net.SocketWrapperBase;
-import org.apache.tomcat.util.res.StringManager;
 
 /**
  * AJP Processor implementation.
@@ -134,7 +126,7 @@ public class AjpProcessor extends AbstractProcessor {
         s.add("javax.servlet.request.key_size");
         s.add("javax.servlet.request.ssl_session");
         s.add("javax.servlet.request.X509Certificate");
-        javaxAttributes= Collections.unmodifiableSet(s);
+        javaxAttributes = Collections.unmodifiableSet(s);
 
         Set<String> iis = new HashSet<>();
         iis.add("CERT_ISSUER");
@@ -263,8 +255,6 @@ public class AjpProcessor extends AbstractProcessor {
     private long bytesWritten = 0;
 
 
-
-
     // ------------------------------------------------------------ Constructor
 
     public AjpProcessor(AbstractAjpProtocol<?> protocol, Adapter adapter) {
@@ -383,7 +373,7 @@ public class AjpProcessor extends AbstractProcessor {
                     }
                     recycle();
                     continue;
-                } else if(type != Constants.JK_AJP13_FORWARD_REQUEST) {
+                } else if (type != Constants.JK_AJP13_FORWARD_REQUEST) {
                     // Unexpected packet type. Unread body packets should have
                     // been swallowed in finish().
                     if (getLog().isDebugEnabled()) {
@@ -451,7 +441,7 @@ public class AjpProcessor extends AbstractProcessor {
                 try {
                     action(ActionCode.COMMIT, null);
                     finishResponse();
-                } catch (IOException ioe){
+                } catch (IOException ioe) {
                     setErrorState(ErrorState.CLOSE_CONNECTION_NOW, ioe);
                 } catch (Throwable t) {
                     ExceptionUtils.handleThrowable(t);
@@ -515,15 +505,15 @@ public class AjpProcessor extends AbstractProcessor {
     // ------------------------------------------------------ Protected Methods
 
     // Methods used by SocketInputBuffer
+
     /**
      * Read an AJP body message. Used to read both the 'special' packet in ajp13
      * and to receive the data after we send a GET_BODY packet.
      *
      * @param block If there is no data available to read when this method is
      *              called, should this call block until data becomes available?
-     *
      * @return <code>true</code> if at least one body byte was read, otherwise
-     *         <code>false</code>
+     * <code>false</code>
      */
     private boolean receive(boolean block) throws IOException {
 
@@ -554,16 +544,14 @@ public class AjpProcessor extends AbstractProcessor {
     /**
      * Read an AJP message.
      *
-     * @param message   The message to populate
-     * @param block If there is no data available to read when this method is
-     *              called, should this call block until data becomes available?
-
+     * @param message The message to populate
+     * @param block   If there is no data available to read when this method is
+     *                called, should this call block until data becomes available?
      * @return true if the message has been read, false if no data was read
-     *
      * @throws IOException any other failure, including incomplete reads
      */
     private boolean readMessage(AjpMessage message, boolean block)
-        throws IOException {
+            throws IOException {
 
         byte[] buf = message.getBuffer();
 
@@ -576,8 +564,7 @@ public class AjpProcessor extends AbstractProcessor {
             // Invalid AJP header signature
             throw new IOException(sm.getString("ajpmessage.invalidLength",
                     Integer.valueOf(messageLength)));
-        }
-        else if (messageLength == 0) {
+        } else if (messageLength == 0) {
             // Zero length message.
             return true;
         } else {
@@ -598,9 +585,10 @@ public class AjpProcessor extends AbstractProcessor {
     /**
      * Get more request body data from the web server and store it in the
      * internal buffer.
+     *
      * @param block <code>true</code> if this is blocking IO
      * @return <code>true</code> if there is more data,
-     *  <code>false</code> if not.
+     * <code>false</code> if not.
      * @throws IOException An IO error occurred
      */
     protected boolean refillReadBuffer(boolean block) throws IOException {
@@ -677,7 +665,7 @@ public class AjpProcessor extends AbstractProcessor {
 
         boolean contentLengthSet = false;
         int hCount = requestHeaderMessage.getInt();
-        for(int i = 0 ; i < hCount ; i++) {
+        for (int i = 0; i < hCount; i++) {
             String hName = null;
 
             // Header names are encoded as either an integer code starting
@@ -688,7 +676,7 @@ public class AjpProcessor extends AbstractProcessor {
 
             MessageBytes vMB = null;
             isc &= 0xFF00;
-            if(0xA000 == isc) {
+            if (0xA000 == isc) {
                 requestHeaderMessage.getInt(); // To advance the read position
                 hName = Constants.getHeaderForCode(hId - 1);
                 vMB = headers.addValue(hName);
@@ -738,129 +726,129 @@ public class AjpProcessor extends AbstractProcessor {
 
             switch (attributeCode) {
 
-            case Constants.SC_A_REQ_ATTRIBUTE :
-                requestHeaderMessage.getBytes(tmpMB);
-                String n = tmpMB.toString();
-                requestHeaderMessage.getBytes(tmpMB);
-                String v = tmpMB.toString();
-                /*
-                 * AJP13 misses to forward the local IP address and the
-                 * remote port. Allow the AJP connector to add this info via
-                 * private request attributes.
-                 * We will accept the forwarded data and remove it from the
-                 * public list of request attributes.
-                 */
-                if(n.equals(Constants.SC_A_REQ_LOCAL_ADDR)) {
-                    request.localAddr().setString(v);
-                } else if(n.equals(Constants.SC_A_REQ_REMOTE_PORT)) {
-                    try {
-                        request.setRemotePort(Integer.parseInt(v));
-                    } catch (NumberFormatException nfe) {
-                        // Ignore invalid value
-                    }
-                } else if(n.equals(Constants.SC_A_SSL_PROTOCOL)) {
-                    request.setAttribute(SSLSupport.PROTOCOL_VERSION_KEY, v);
-                } else if (n.equals("JK_LB_ACTIVATION")) {
-                    request.setAttribute(n, v);
-                } else if (javaxAttributes.contains(n)) {
-                    request.setAttribute(n, v);
-                } else if (iisTlsAttributes.contains(n)) {
-                    // Allow IIS TLS attributes
-                    request.setAttribute(n, v);
-                } else {
-                    // All 'known' attributes will be processed by the previous
-                    // blocks. Any remaining attribute is an 'arbitrary' one.
-                    Pattern pattern = protocol.getAllowedRequestAttributesPatternInternal();
-                    if (pattern != null && pattern.matcher(n).matches()) {
+                case Constants.SC_A_REQ_ATTRIBUTE:
+                    requestHeaderMessage.getBytes(tmpMB);
+                    String n = tmpMB.toString();
+                    requestHeaderMessage.getBytes(tmpMB);
+                    String v = tmpMB.toString();
+                    /*
+                     * AJP13 misses to forward the local IP address and the
+                     * remote port. Allow the AJP connector to add this info via
+                     * private request attributes.
+                     * We will accept the forwarded data and remove it from the
+                     * public list of request attributes.
+                     */
+                    if (n.equals(Constants.SC_A_REQ_LOCAL_ADDR)) {
+                        request.localAddr().setString(v);
+                    } else if (n.equals(Constants.SC_A_REQ_REMOTE_PORT)) {
+                        try {
+                            request.setRemotePort(Integer.parseInt(v));
+                        } catch (NumberFormatException nfe) {
+                            // Ignore invalid value
+                        }
+                    } else if (n.equals(Constants.SC_A_SSL_PROTOCOL)) {
+                        request.setAttribute(SSLSupport.PROTOCOL_VERSION_KEY, v);
+                    } else if (n.equals("JK_LB_ACTIVATION")) {
+                        request.setAttribute(n, v);
+                    } else if (javaxAttributes.contains(n)) {
+                        request.setAttribute(n, v);
+                    } else if (iisTlsAttributes.contains(n)) {
+                        // Allow IIS TLS attributes
                         request.setAttribute(n, v);
                     } else {
-                        log.warn(sm.getString("ajpprocessor.unknownAttribute", n));
-                        response.setStatus(403);
-                        setErrorState(ErrorState.CLOSE_CLEAN, null);
+                        // All 'known' attributes will be processed by the previous
+                        // blocks. Any remaining attribute is an 'arbitrary' one.
+                        Pattern pattern = protocol.getAllowedRequestAttributesPatternInternal();
+                        if (pattern != null && pattern.matcher(n).matches()) {
+                            request.setAttribute(n, v);
+                        } else {
+                            log.warn(sm.getString("ajpprocessor.unknownAttribute", n));
+                            response.setStatus(403);
+                            setErrorState(ErrorState.CLOSE_CLEAN, null);
+                        }
                     }
-                }
-                break;
+                    break;
 
-            case Constants.SC_A_CONTEXT :
-                requestHeaderMessage.getBytes(tmpMB);
-                // nothing
-                break;
-
-            case Constants.SC_A_SERVLET_PATH :
-                requestHeaderMessage.getBytes(tmpMB);
-                // nothing
-                break;
-
-            case Constants.SC_A_REMOTE_USER :
-                boolean tomcatAuthorization  = protocol.getTomcatAuthorization();
-                if (tomcatAuthorization || !protocol.getTomcatAuthentication()) {
-                    // Implies tomcatAuthentication == false
-                    requestHeaderMessage.getBytes(request.getRemoteUser());
-                    request.setRemoteUserNeedsAuthorization(tomcatAuthorization);
-                } else {
-                    // Ignore user information from reverse proxy
+                case Constants.SC_A_CONTEXT:
                     requestHeaderMessage.getBytes(tmpMB);
-                }
-                break;
+                    // nothing
+                    break;
 
-            case Constants.SC_A_AUTH_TYPE :
-                if (protocol.getTomcatAuthentication()) {
-                    // ignore server
+                case Constants.SC_A_SERVLET_PATH:
                     requestHeaderMessage.getBytes(tmpMB);
-                } else {
-                    requestHeaderMessage.getBytes(request.getAuthType());
-                }
-                break;
+                    // nothing
+                    break;
 
-            case Constants.SC_A_QUERY_STRING :
-                requestHeaderMessage.getBytes(request.queryString());
-                break;
-
-            case Constants.SC_A_JVM_ROUTE :
-                requestHeaderMessage.getBytes(tmpMB);
-                // nothing
-                break;
-
-            case Constants.SC_A_SSL_CERT :
-                // SSL certificate extraction is lazy, moved to JkCoyoteHandler
-                requestHeaderMessage.getBytes(certificates);
-                break;
-
-            case Constants.SC_A_SSL_CIPHER :
-                requestHeaderMessage.getBytes(tmpMB);
-                request.setAttribute(SSLSupport.CIPHER_SUITE_KEY,
-                        tmpMB.toString());
-                break;
-
-            case Constants.SC_A_SSL_SESSION :
-                requestHeaderMessage.getBytes(tmpMB);
-                request.setAttribute(SSLSupport.SESSION_ID_KEY,
-                        tmpMB.toString());
-                break;
-
-            case Constants.SC_A_SSL_KEY_SIZE :
-                request.setAttribute(SSLSupport.KEY_SIZE_KEY,
-                        Integer.valueOf(requestHeaderMessage.getInt()));
-                break;
-
-            case Constants.SC_A_STORED_METHOD:
-                requestHeaderMessage.getBytes(request.method());
-                break;
-
-            case Constants.SC_A_SECRET:
-                requestHeaderMessage.getBytes(tmpMB);
-                if (secret != null && secret.length() > 0) {
-                    secretPresentInRequest = true;
-                    if (!tmpMB.equals(secret)) {
-                        response.setStatus(403);
-                        setErrorState(ErrorState.CLOSE_CLEAN, null);
+                case Constants.SC_A_REMOTE_USER:
+                    boolean tomcatAuthorization = protocol.getTomcatAuthorization();
+                    if (tomcatAuthorization || !protocol.getTomcatAuthentication()) {
+                        // Implies tomcatAuthentication == false
+                        requestHeaderMessage.getBytes(request.getRemoteUser());
+                        request.setRemoteUserNeedsAuthorization(tomcatAuthorization);
+                    } else {
+                        // Ignore user information from reverse proxy
+                        requestHeaderMessage.getBytes(tmpMB);
                     }
-                }
-                break;
+                    break;
 
-            default:
-                // Ignore unknown attribute for backward compatibility
-                break;
+                case Constants.SC_A_AUTH_TYPE:
+                    if (protocol.getTomcatAuthentication()) {
+                        // ignore server
+                        requestHeaderMessage.getBytes(tmpMB);
+                    } else {
+                        requestHeaderMessage.getBytes(request.getAuthType());
+                    }
+                    break;
+
+                case Constants.SC_A_QUERY_STRING:
+                    requestHeaderMessage.getBytes(request.queryString());
+                    break;
+
+                case Constants.SC_A_JVM_ROUTE:
+                    requestHeaderMessage.getBytes(tmpMB);
+                    // nothing
+                    break;
+
+                case Constants.SC_A_SSL_CERT:
+                    // SSL certificate extraction is lazy, moved to JkCoyoteHandler
+                    requestHeaderMessage.getBytes(certificates);
+                    break;
+
+                case Constants.SC_A_SSL_CIPHER:
+                    requestHeaderMessage.getBytes(tmpMB);
+                    request.setAttribute(SSLSupport.CIPHER_SUITE_KEY,
+                            tmpMB.toString());
+                    break;
+
+                case Constants.SC_A_SSL_SESSION:
+                    requestHeaderMessage.getBytes(tmpMB);
+                    request.setAttribute(SSLSupport.SESSION_ID_KEY,
+                            tmpMB.toString());
+                    break;
+
+                case Constants.SC_A_SSL_KEY_SIZE:
+                    request.setAttribute(SSLSupport.KEY_SIZE_KEY,
+                            Integer.valueOf(requestHeaderMessage.getInt()));
+                    break;
+
+                case Constants.SC_A_STORED_METHOD:
+                    requestHeaderMessage.getBytes(request.method());
+                    break;
+
+                case Constants.SC_A_SECRET:
+                    requestHeaderMessage.getBytes(tmpMB);
+                    if (secret != null && secret.length() > 0) {
+                        secretPresentInRequest = true;
+                        if (!tmpMB.equals(secret)) {
+                            response.setStatus(403);
+                            setErrorState(ErrorState.CLOSE_CLEAN, null);
+                        }
+                    }
+                    break;
+
+                default:
+                    // Ignore unknown attribute for backward compatibility
+                    break;
 
             }
 
@@ -886,11 +874,11 @@ public class AjpProcessor extends AbstractProcessor {
                     slashPos = uriBC.getLength();
                     // Set URI as "/"
                     request.requestURI().setBytes
-                    (uriB, uriBCStart + pos + 1, 1);
+                            (uriB, uriBCStart + pos + 1, 1);
                 } else {
                     request.requestURI().setBytes
-                    (uriB, uriBCStart + slashPos,
-                            uriBC.getLength() - slashPos);
+                            (uriB, uriBCStart + slashPos,
+                                    uriBC.getLength() - slashPos);
                 }
                 MessageBytes hostMB = headers.setValue("host");
                 hostMB.setBytes(uriB, uriBCStart + pos + 3,
@@ -1002,7 +990,7 @@ public class AjpProcessor extends AbstractProcessor {
             } else {
                 responseMessage.appendBytes(hN);
             }
-            MessageBytes hV=headers.getValue(i);
+            MessageBytes hV = headers.getValue(i);
             responseMessage.appendBytes(hV);
         }
 
@@ -1141,9 +1129,9 @@ public class AjpProcessor extends AbstractProcessor {
             ByteChunk certData = certificates.getByteChunk();
             X509Certificate jsseCerts[] = null;
             ByteArrayInputStream bais =
-                new ByteArrayInputStream(certData.getBytes(),
-                        certData.getStart(),
-                        certData.getLength());
+                    new ByteArrayInputStream(certData.getBytes(),
+                            certData.getStart(),
+                            certData.getLength());
             // Fill the  elements.
             try {
                 CertificateFactory cf;
@@ -1154,15 +1142,15 @@ public class AjpProcessor extends AbstractProcessor {
                     cf = CertificateFactory.getInstance("X.509",
                             clientCertProvider);
                 }
-                while(bais.available() > 0) {
+                while (bais.available() > 0) {
                     X509Certificate cert = (X509Certificate)
-                    cf.generateCertificate(bais);
-                    if(jsseCerts == null) {
+                            cf.generateCertificate(bais);
+                    if (jsseCerts == null) {
                         jsseCerts = new X509Certificate[1];
                         jsseCerts[0] = cert;
                     } else {
-                        X509Certificate [] temp = new X509Certificate[jsseCerts.length+1];
-                        System.arraycopy(jsseCerts,0,temp,0,jsseCerts.length);
+                        X509Certificate[] temp = new X509Certificate[jsseCerts.length + 1];
+                        System.arraycopy(jsseCerts, 0, temp, 0, jsseCerts.length);
                         temp[jsseCerts.length] = cert;
                         jsseCerts = temp;
                     }
@@ -1216,8 +1204,8 @@ public class AjpProcessor extends AbstractProcessor {
      * @param n     The minimum number of bytes to read
      * @param block If there is no data available to read when this method is
      *              called, should this call block until data becomes available?
-     * @return  <code>true</code> if the requested number of bytes were read
-     *          else <code>false</code>
+     * @return <code>true</code> if the requested number of bytes were read
+     * else <code>false</code>
      * @throws IOException
      */
     private boolean read(byte[] buf, int pos, int n, boolean block) throws IOException {

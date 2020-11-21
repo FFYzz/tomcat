@@ -16,25 +16,17 @@
  */
 package org.apache.tomcat.util.descriptor.web;
 
-import java.io.Serializable;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import org.apache.juli.logging.Log;
+import org.apache.tomcat.util.res.StringManager;
 
 import javax.servlet.HttpConstraintElement;
 import javax.servlet.HttpMethodConstraintElement;
 import javax.servlet.ServletSecurityElement;
 import javax.servlet.annotation.ServletSecurity;
 import javax.servlet.annotation.ServletSecurity.EmptyRoleSemantic;
-
-import org.apache.juli.logging.Log;
-import org.apache.tomcat.util.res.StringManager;
+import java.io.Serializable;
+import java.nio.charset.Charset;
+import java.util.*;
 
 
 /**
@@ -131,6 +123,7 @@ public class SecurityConstraint extends XmlEncodingBase implements Serializable 
     /**
      * Was the "all roles" wildcard included in this authentication
      * constraint?
+     *
      * @return <code>true</code> if all roles
      */
     public boolean getAllRoles() {
@@ -143,6 +136,7 @@ public class SecurityConstraint extends XmlEncodingBase implements Serializable 
     /**
      * Was the "all authenticated users" wildcard included in this
      * authentication constraint?
+     *
      * @return <code>true</code> if all authenticated users
      */
     public boolean getAuthenticatedUsers() {
@@ -153,6 +147,7 @@ public class SecurityConstraint extends XmlEncodingBase implements Serializable 
     /**
      * Return the authorization constraint present flag for this security
      * constraint.
+     *
      * @return <code>true</code> if this needs authorization
      */
     public boolean getAuthConstraint() {
@@ -165,6 +160,7 @@ public class SecurityConstraint extends XmlEncodingBase implements Serializable 
     /**
      * Set the authorization constraint present flag for this security
      * constraint.
+     *
      * @param authConstraint The new value
      */
     public void setAuthConstraint(boolean authConstraint) {
@@ -186,6 +182,7 @@ public class SecurityConstraint extends XmlEncodingBase implements Serializable 
 
     /**
      * Set the display name of this security constraint.
+     *
      * @param displayName The new value
      */
     public void setDisplayName(String displayName) {
@@ -197,6 +194,7 @@ public class SecurityConstraint extends XmlEncodingBase implements Serializable 
 
     /**
      * Return the user data constraint for this security constraint.
+     *
      * @return the user constraint
      */
     public String getUserConstraint() {
@@ -320,6 +318,7 @@ public class SecurityConstraint extends XmlEncodingBase implements Serializable 
      * protected by this security constraint.  If none have been defined,
      * a zero-length array is returned (which implies that all authenticated
      * users are permitted access).
+     *
      * @return the roles array
      */
     public String[] findAuthRoles() {
@@ -349,6 +348,7 @@ public class SecurityConstraint extends XmlEncodingBase implements Serializable 
      * Return all of the web resource collections protected by this
      * security constraint.  If there are none, a zero-length array is
      * returned.
+     *
      * @return the collections array
      */
     public SecurityCollection[] findCollections() {
@@ -358,7 +358,8 @@ public class SecurityConstraint extends XmlEncodingBase implements Serializable 
 
     /**
      * Check if the constraint applies to a URI and method.
-     * @param uri Context-relative URI to check
+     *
+     * @param uri    Context-relative URI to check
      * @param method Request method being used
      * @return <code>true</code> if the specified context-relative URI (and
      * associated HTTP method) are protected by this security constraint.
@@ -446,7 +447,7 @@ public class SecurityConstraint extends XmlEncodingBase implements Serializable 
         if (n >= 0) {
             int j = 0;
             SecurityCollection results[] =
-                new SecurityCollection[collections.length - 1];
+                    new SecurityCollection[collections.length - 1];
             for (int i = 0; i < collections.length; i++) {
                 if (i != n)
                     results[j++] = collections[i];
@@ -481,8 +482,8 @@ public class SecurityConstraint extends XmlEncodingBase implements Serializable 
      * This method follows the same rules (in the same order) as those used
      * for mapping requests to servlets.
      *
-     * @param path Context-relative request path to be checked
-     *  (must start with '/')
+     * @param path    Context-relative request path to be checked
+     *                (must start with '/')
      * @param pattern URL pattern to be compared against
      */
     private boolean matchPattern(String path, String pattern) {
@@ -520,7 +521,7 @@ public class SecurityConstraint extends XmlEncodingBase implements Serializable 
             int slash = path.lastIndexOf('/');
             int period = path.lastIndexOf('.');
             if ((slash >= 0) && (period > slash) &&
-                path.endsWith(pattern.substring(1))) {
+                    path.endsWith(pattern.substring(1))) {
                 return true;
             }
             return false;
@@ -539,11 +540,11 @@ public class SecurityConstraint extends XmlEncodingBase implements Serializable 
      * Convert a {@link ServletSecurityElement} to an array of
      * {@link SecurityConstraint}(s).
      *
-     * @param element       The element to be converted
-     * @param urlPattern    The url pattern that the element should be applied
-     *                      to
-     * @return              The (possibly zero length) array of constraints that
-     *                      are the equivalent to the input
+     * @param element    The element to be converted
+     * @param urlPattern The url pattern that the element should be applied
+     *                   to
+     * @return The (possibly zero length) array of constraints that
+     * are the equivalent to the input
      */
     public static SecurityConstraint[] createConstraints(
             ServletSecurityElement element, String urlPattern) {
@@ -551,10 +552,10 @@ public class SecurityConstraint extends XmlEncodingBase implements Serializable 
 
         // Add the per method constraints
         Collection<HttpMethodConstraintElement> methods =
-            element.getHttpMethodConstraints();
+                element.getHttpMethodConstraints();
         for (HttpMethodConstraintElement methodElement : methods) {
             SecurityConstraint constraint =
-                createConstraint(methodElement, urlPattern, true);
+                    createConstraint(methodElement, urlPattern, true);
             // There will always be a single collection
             SecurityCollection collection = constraint.findCollections()[0];
             collection.addMethod(methodElement.getMethodName());
@@ -616,8 +617,8 @@ public class SecurityConstraint extends XmlEncodingBase implements Serializable 
             boolean denyUncoveredHttpMethods, Log log) {
 
         Set<String> coveredPatterns = new HashSet<>();
-        Map<String,Set<String>> urlMethodMap = new HashMap<>();
-        Map<String,Set<String>> urlOmittedMethodMap = new HashMap<>();
+        Map<String, Set<String>> urlMethodMap = new HashMap<>();
+        Map<String, Set<String>> urlOmittedMethodMap = new HashMap<>();
 
         List<SecurityConstraint> newConstraints = new ArrayList<>();
 
@@ -734,7 +735,7 @@ public class SecurityConstraint extends XmlEncodingBase implements Serializable 
 
 
     private static void handleOmittedMethods(Set<String> omittedMethods, String pattern,
-            boolean denyUncoveredHttpMethods, List<SecurityConstraint> newConstraints, Log log) {
+                                             boolean denyUncoveredHttpMethods, List<SecurityConstraint> newConstraints, Log log) {
         if (omittedMethods.size() > 0) {
             StringBuilder msg = new StringBuilder();
             for (String method : omittedMethods) {

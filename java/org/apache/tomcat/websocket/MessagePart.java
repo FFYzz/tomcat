@@ -16,9 +16,8 @@
  */
 package org.apache.tomcat.websocket;
 
-import java.nio.ByteBuffer;
-
 import javax.websocket.SendHandler;
+import java.nio.ByteBuffer;
 
 class MessagePart {
     private final boolean fin;
@@ -29,9 +28,9 @@ class MessagePart {
     private volatile SendHandler endHandler;
     private final long blockingWriteTimeoutExpiry;
 
-    public MessagePart( boolean fin, int rsv, byte opCode, ByteBuffer payload,
-            SendHandler intermediateHandler, SendHandler endHandler,
-            long blockingWriteTimeoutExpiry) {
+    public MessagePart(boolean fin, int rsv, byte opCode, ByteBuffer payload,
+                       SendHandler intermediateHandler, SendHandler endHandler,
+                       long blockingWriteTimeoutExpiry) {
         this.fin = fin;
         this.rsv = rsv;
         this.opCode = opCode;

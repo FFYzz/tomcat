@@ -17,11 +17,10 @@
 
 package org.apache.el.lang;
 
-import java.lang.reflect.Method;
+import org.apache.el.util.MessageFactory;
 
 import javax.el.FunctionMapper;
-
-import org.apache.el.util.MessageFactory;
+import java.lang.reflect.Method;
 
 /**
  * @author Jacob Hookom [jacob@hookom.net]

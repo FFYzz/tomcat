@@ -16,6 +16,7 @@
  */
 package org.apache.tomcat.util.net;
 
+import javax.management.ObjectName;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -23,8 +24,6 @@ import java.net.SocketException;
 import java.net.StandardSocketOptions;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
-
-import javax.management.ObjectName;
 
 /**
  * Properties that can be set in the &lt;Connector&gt; element
@@ -96,10 +95,10 @@ public class SocketProperties {
      * -1 means unlimited cached, 0 means no cache
      * Default value is 500
      * TODO: The default should be changed in Tomcat 10, actually it should be
-     *   bufferPoolSize / (appReadBufSize + appWriteBufSize), assuming the SSL
-     *   buffers are ignored (that would be logical), and the value would be 6400.
-     *   So the default value will be changed to a new default value like -2 to
-     *   set a dynamic value based on bufferPoolSize in that case.
+     * bufferPoolSize / (appReadBufSize + appWriteBufSize), assuming the SSL
+     * buffers are ignored (that would be logical), and the value would be 6400.
+     * So the default value will be changed to a new default value like -2 to
+     * set a dynamic value based on bufferPoolSize in that case.
      */
     protected int bufferPool = 500;
 
@@ -108,14 +107,14 @@ public class SocketProperties {
      * -1 means unlimited, 0 means no cache
      * Default value is 100MB (1024*1024*100 bytes)
      * TODO: The default value to be used could rather be based on the
-     *   JVM max heap, otherwise it could be a problem in some
-     *   environments. Big servers also need to use a much higher default,
-     *   while small cloud based ones should use 0 instead.
-     *   Possible default value strategy:
-     *     heap inf 1GB: 0
-     *     heap sup 1GB: heap / 32
+     * JVM max heap, otherwise it could be a problem in some
+     * environments. Big servers also need to use a much higher default,
+     * while small cloud based ones should use 0 instead.
+     * Possible default value strategy:
+     * heap inf 1GB: 0
+     * heap sup 1GB: heap / 32
      */
-    protected int bufferPoolSize = 1024*1024*100;
+    protected int bufferPoolSize = 1024 * 1024 * 100;
 
     /**
      * TCP_NO_DELAY option. JVM default used if not set.
@@ -192,12 +191,12 @@ public class SocketProperties {
     private ObjectName oname = null;
 
 
-    public void setProperties(Socket socket) throws SocketException{
+    public void setProperties(Socket socket) throws SocketException {
         if (rxBufSize != null)
             socket.setReceiveBufferSize(rxBufSize.intValue());
         if (txBufSize != null)
             socket.setSendBufferSize(txBufSize.intValue());
-        if (ooBInline !=null)
+        if (ooBInline != null)
             socket.setOOBInline(ooBInline.booleanValue());
         if (soKeepAlive != null)
             socket.setKeepAlive(soKeepAlive.booleanValue());
@@ -223,7 +222,7 @@ public class SocketProperties {
         }
     }
 
-    public void setProperties(ServerSocket socket) throws SocketException{
+    public void setProperties(ServerSocket socket) throws SocketException {
         if (rxBufSize != null)
             socket.setReceiveBufferSize(rxBufSize.intValue());
         if (performanceConnectionTime != null && performanceLatency != null &&
@@ -350,7 +349,7 @@ public class SocketProperties {
 
     public void setPerformanceConnectionTime(int performanceConnectionTime) {
         this.performanceConnectionTime =
-            Integer.valueOf(performanceConnectionTime);
+                Integer.valueOf(performanceConnectionTime);
     }
 
     public void setTxBufSize(int txBufSize) {

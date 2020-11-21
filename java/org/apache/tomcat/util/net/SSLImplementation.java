@@ -17,12 +17,12 @@
 
 package org.apache.tomcat.util.net;
 
-import javax.net.ssl.SSLSession;
-
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.net.jsse.JSSEImplementation;
 import org.apache.tomcat.util.res.StringManager;
+
+import javax.net.ssl.SSLSession;
 
 /**
  * Provides a factory and base implementation for the Tomcat specific mechanism
@@ -40,11 +40,9 @@ public abstract class SSLImplementation {
      *
      * @param className The class name of the required implementation or null to
      *                  use the default (currently {@link JSSEImplementation}.
-     *
      * @return An instance of the required implementation
-     *
      * @throws ClassNotFoundException If an instance of the requested class
-     *         cannot be created
+     *                                cannot be created
      */
     public static SSLImplementation getInstance(String className)
             throws ClassNotFoundException {

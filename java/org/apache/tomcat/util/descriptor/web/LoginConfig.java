@@ -16,9 +16,9 @@
  */
 package org.apache.tomcat.util.descriptor.web;
 
-import java.io.Serializable;
-
 import org.apache.tomcat.util.buf.UDecoder;
+
+import java.io.Serializable;
 
 /**
  * Representation of a login configuration element for a web application,
@@ -49,9 +49,9 @@ public class LoginConfig extends XmlEncodingBase implements Serializable {
      * Construct a new LoginConfig with the specified properties.
      *
      * @param authMethod The authentication method
-     * @param realmName The realm name
-     * @param loginPage The login page URI
-     * @param errorPage The error page URI
+     * @param realmName  The realm name
+     * @param loginPage  The login page URI
+     * @param errorPage  The error page URI
      */
     public LoginConfig(String authMethod, String realmName,
                        String loginPage, String errorPage) {

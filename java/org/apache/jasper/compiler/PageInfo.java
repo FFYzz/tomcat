@@ -16,20 +16,12 @@
  */
 package org.apache.jasper.compiler;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
+import org.apache.jasper.Constants;
+import org.apache.jasper.JasperException;
 
 import javax.el.ExpressionFactory;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
-
-import org.apache.jasper.Constants;
-import org.apache.jasper.JasperException;
+import java.util.*;
 
 /**
  * A repository for various info about the translation unit under compilation.
@@ -40,11 +32,11 @@ import org.apache.jasper.JasperException;
 class PageInfo {
 
     private final Vector<String> imports;
-    private final Map<String,Long> dependants;
+    private final Map<String, Long> dependants;
 
     private final BeanRepository beanRepository;
     private final Set<String> varInfoNames;
-    private final HashMap<String,TagLibraryInfo> taglibsMap;
+    private final HashMap<String, TagLibraryInfo> taglibsMap;
     private final HashMap<String, String> jspPrefixMapper;
     private final HashMap<String, LinkedList<String>> xmlPrefixMapper;
     private final HashMap<String, Mark> nonCustomTagPrefixMap;
@@ -57,7 +49,7 @@ class PageInfo {
     private String session;
     private boolean isSession = true;
     private String bufferValue;
-    private int buffer = 8*1024;
+    private int buffer = 8 * 1024;
     private String autoFlush;
     private boolean isAutoFlush = true;
     private String isThreadSafeValue;
@@ -77,7 +69,7 @@ class PageInfo {
     private String deferredSyntaxAllowedAsLiteralValue;
     private boolean deferredSyntaxAllowedAsLiteral = false;
     private final ExpressionFactory expressionFactory =
-        ExpressionFactory.newInstance();
+            ExpressionFactory.newInstance();
     private String trimDirectiveWhitespacesValue;
     private boolean trimDirectiveWhitespaces = false;
 
@@ -129,7 +121,6 @@ class PageInfo {
      * that this Id is now declared.
      *
      * @param id The plugin ID to check
-     *
      * @return true if Id has been declared.
      */
     public boolean isPluginDeclared(String id) {
@@ -157,10 +148,10 @@ class PageInfo {
 
     public void addDependant(String d, Long lastModified) {
         if (!dependants.containsKey(d) && !jspFile.equals(d))
-                dependants.put(d, lastModified);
+            dependants.put(d, lastModified);
     }
 
-    public Map<String,Long> getDependants() {
+    public Map<String, Long> getDependants() {
         return dependants;
     }
 
@@ -376,8 +367,8 @@ class PageInfo {
      * language
      */
     public void setLanguage(String value, Node n, ErrorDispatcher err,
-                boolean pagedir)
-        throws JasperException {
+                            boolean pagedir)
+            throws JasperException {
 
         if (!"java".equalsIgnoreCase(value)) {
             if (pagedir)
@@ -404,9 +395,8 @@ class PageInfo {
      * Gets the value of the 'extends' page directive attribute.
      *
      * @param useDefault TRUE if the default
-     * (org.apache.jasper.runtime.HttpJspBase) should be returned if this
-     * attribute has not been set, FALSE otherwise
-     *
+     *                   (org.apache.jasper.runtime.HttpJspBase) should be returned if this
+     *                   attribute has not been set, FALSE otherwise
      * @return The value of the 'extends' page directive attribute, or the
      * default (org.apache.jasper.runtime.HttpJspBase) if this attribute has
      * not been set and useDefault is TRUE
@@ -443,7 +433,7 @@ class PageInfo {
      * buffer
      */
     public void setBufferValue(String value, Node n, ErrorDispatcher err)
-        throws JasperException {
+            throws JasperException {
 
         if ("none".equalsIgnoreCase(value))
             buffer = 0;
@@ -457,7 +447,7 @@ class PageInfo {
             }
             try {
                 @SuppressWarnings("null") // value can't be null here
-                int k = Integer.parseInt(value.substring(0, value.length()-2));
+                int k = Integer.parseInt(value.substring(0, value.length() - 2));
                 buffer = k * 1024;
             } catch (NumberFormatException e) {
                 if (n == null) {
@@ -484,7 +474,7 @@ class PageInfo {
      * session
      */
     public void setSession(String value, Node n, ErrorDispatcher err)
-        throws JasperException {
+            throws JasperException {
 
         if ("true".equalsIgnoreCase(value))
             isSession = true;
@@ -509,7 +499,7 @@ class PageInfo {
      * autoFlush
      */
     public void setAutoFlush(String value, Node n, ErrorDispatcher err)
-        throws JasperException {
+            throws JasperException {
 
         if ("true".equalsIgnoreCase(value))
             isAutoFlush = true;
@@ -534,7 +524,7 @@ class PageInfo {
      * isThreadSafe
      */
     public void setIsThreadSafe(String value, Node n, ErrorDispatcher err)
-        throws JasperException {
+            throws JasperException {
 
         if ("true".equalsIgnoreCase(value))
             isThreadSafe = true;
@@ -583,7 +573,7 @@ class PageInfo {
      * isErrorPage
      */
     public void setIsErrorPage(String value, Node n, ErrorDispatcher err)
-        throws JasperException {
+            throws JasperException {
 
         if ("true".equalsIgnoreCase(value))
             isErrorPage = true;
@@ -608,8 +598,8 @@ class PageInfo {
      * isELIgnored
      */
     public void setIsELIgnored(String value, Node n, ErrorDispatcher err,
-                   boolean pagedir)
-        throws JasperException {
+                               boolean pagedir)
+            throws JasperException {
 
         if ("true".equalsIgnoreCase(value))
             isELIgnored = true;
@@ -629,8 +619,8 @@ class PageInfo {
      * deferredSyntaxAllowedAsLiteral
      */
     public void setDeferredSyntaxAllowedAsLiteral(String value, Node n, ErrorDispatcher err,
-                   boolean pagedir)
-        throws JasperException {
+                                                  boolean pagedir)
+            throws JasperException {
 
         if ("true".equalsIgnoreCase(value))
             deferredSyntaxAllowedAsLiteral = true;
@@ -650,8 +640,8 @@ class PageInfo {
      * trimDirectiveWhitespaces
      */
     public void setTrimDirectiveWhitespaces(String value, Node n, ErrorDispatcher err,
-                   boolean pagedir)
-        throws JasperException {
+                                            boolean pagedir)
+            throws JasperException {
 
         if ("true".equalsIgnoreCase(value))
             trimDirectiveWhitespaces = true;

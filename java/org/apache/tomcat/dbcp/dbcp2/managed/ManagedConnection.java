@@ -1,29 +1,28 @@
 /**
- *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.tomcat.dbcp.dbcp2.managed;
+
+import org.apache.tomcat.dbcp.dbcp2.DelegatingConnection;
+import org.apache.tomcat.dbcp.pool2.ObjectPool;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.apache.tomcat.dbcp.dbcp2.DelegatingConnection;
-import org.apache.tomcat.dbcp.pool2.ObjectPool;
 
 /**
  * ManagedConnection is responsible for managing a database connection in a transactional environment (typically called
@@ -59,6 +58,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
             }
         }
     }
+
     private final ObjectPool<C> pool;
     private final TransactionRegistry transactionRegistry;
     private final boolean accessToUnderlyingConnectionAllowed;
@@ -80,7 +80,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
      *             Thrown when there is problem managing transactions.
      */
     public ManagedConnection(final ObjectPool<C> pool, final TransactionRegistry transactionRegistry,
-            final boolean accessToUnderlyingConnectionAllowed) throws SQLException {
+                             final boolean accessToUnderlyingConnectionAllowed) throws SQLException {
         super(null);
         this.pool = pool;
         this.transactionRegistry = transactionRegistry;
@@ -279,8 +279,7 @@ public class ManagedConnection<C extends Connection> extends DelegatingConnectio
             // Set our delegate to the shared connection. Note that this will
             // always be of type C since it has been shared by another
             // connection from the same pool.
-            @SuppressWarnings("unchecked")
-            final C shared = (C) transactionContext.getSharedConnection();
+            @SuppressWarnings("unchecked") final C shared = (C) transactionContext.getSharedConnection();
             setDelegate(shared);
 
             // remember that we are using a shared connection so it can be cleared after the

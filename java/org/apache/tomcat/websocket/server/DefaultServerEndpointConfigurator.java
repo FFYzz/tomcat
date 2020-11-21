@@ -16,17 +16,16 @@
  */
 package org.apache.tomcat.websocket.server;
 
+import javax.websocket.Extension;
+import javax.websocket.HandshakeResponse;
+import javax.websocket.server.HandshakeRequest;
+import javax.websocket.server.ServerEndpointConfig;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.websocket.Extension;
-import javax.websocket.HandshakeResponse;
-import javax.websocket.server.HandshakeRequest;
-import javax.websocket.server.ServerEndpointConfig;
-
-@aQute.bnd.annotation.spi.ServiceProvider(value=ServerEndpointConfig.Configurator.class)
+@aQute.bnd.annotation.spi.ServiceProvider(value = ServerEndpointConfig.Configurator.class)
 public class DefaultServerEndpointConfigurator
         extends ServerEndpointConfig.Configurator {
 
@@ -47,7 +46,7 @@ public class DefaultServerEndpointConfigurator
 
     @Override
     public String getNegotiatedSubprotocol(List<String> supported,
-            List<String> requested) {
+                                           List<String> requested) {
 
         for (String request : requested) {
             if (supported.contains(request)) {
@@ -60,7 +59,7 @@ public class DefaultServerEndpointConfigurator
 
     @Override
     public List<Extension> getNegotiatedExtensions(List<Extension> installed,
-            List<Extension> requested) {
+                                                   List<Extension> requested) {
         Set<String> installedNames = new HashSet<>();
         for (Extension e : installed) {
             installedNames.add(e.getName());
@@ -82,7 +81,7 @@ public class DefaultServerEndpointConfigurator
 
     @Override
     public void modifyHandshake(ServerEndpointConfig sec,
-            HandshakeRequest request, HandshakeResponse response) {
+                                HandshakeRequest request, HandshakeResponse response) {
         // NO-OP
     }
 

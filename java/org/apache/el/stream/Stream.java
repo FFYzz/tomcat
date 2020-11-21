@@ -16,21 +16,13 @@
  */
 package org.apache.el.stream;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
-
-import javax.el.ELException;
-import javax.el.LambdaExpression;
-
 import org.apache.el.lang.ELArithmetic;
 import org.apache.el.lang.ELSupport;
 import org.apache.el.util.MessageFactory;
+
+import javax.el.ELException;
+import javax.el.LambdaExpression;
+import java.util.*;
 
 public class Stream {
 
@@ -138,7 +130,7 @@ public class Stream {
                 }
             }
 
-            @SuppressWarnings({ "rawtypes", "unchecked" })
+            @SuppressWarnings({"rawtypes", "unchecked"})
             private final void sort() {
                 List list = new ArrayList<>();
                 while (iterator.hasNext()) {
@@ -168,7 +160,7 @@ public class Stream {
                 }
             }
 
-            @SuppressWarnings({ "rawtypes", "unchecked" })
+            @SuppressWarnings({"rawtypes", "unchecked"})
             private final void sort(LambdaExpression le) {
                 List list = new ArrayList<>();
                 Comparator<Object> c = new LambdaExpressionComparator(le);
@@ -343,7 +335,7 @@ public class Stream {
 
         while (iterator.hasNext()) {
             iterator.next();
-            count ++;
+            count++;
         }
 
         return Long.valueOf(count);
@@ -404,7 +396,7 @@ public class Stream {
     }
 
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private Optional compare(boolean isMax) {
         Comparable result = null;
 

@@ -16,9 +16,9 @@
  */
 package org.apache.coyote.http2;
 
-import java.nio.ByteBuffer;
-
 import org.apache.tomcat.util.res.StringManager;
+
+import java.nio.ByteBuffer;
 
 /**
  * A decoder for HPACK.
@@ -88,7 +88,6 @@ public class HpackDecoder {
      * there is no more data in which case this should be considered a protocol error.
      *
      * @param buffer The buffer
-     *
      * @throws HpackException If the packed data is not valid
      */
     void decode(ByteBuffer buffer) throws HpackException {
@@ -102,7 +101,7 @@ public class HpackDecoder {
                 if (index == -1) {
                     buffer.position(originalPos);
                     return;
-                } else if(index == 0) {
+                } else if (index == 0) {
                     throw new HpackException(
                             sm.getString("hpackdecoder.zeroNotValidHeaderTableIndex"));
                 }
@@ -332,9 +331,9 @@ public class HpackDecoder {
     }
 
     private void resizeIfRequired() {
-        if(filledTableSlots == headerTable.length) {
+        if (filledTableSlots == headerTable.length) {
             Hpack.HeaderField[] newArray = new Hpack.HeaderField[headerTable.length + 10]; //we only grow slowly
-            for(int i = 0; i < headerTable.length; ++i) {
+            for (int i = 0; i < headerTable.length; ++i) {
                 newArray[i] = headerTable[(firstSlotPosition + i) % headerTable.length];
             }
             firstSlotPosition = 0;
@@ -412,11 +411,11 @@ public class HpackDecoder {
             // Only count the cookie header once since HTTP/2 splits it into
             // multiple headers to aid compression
             if (!countedCookie) {
-                headerCount ++;
+                headerCount++;
                 countedCookie = true;
             }
         } else {
-            headerCount ++;
+            headerCount++;
         }
         // Overhead will vary. The main concern is that lots of small headers
         // trigger the limiting mechanism correctly. Therefore, use an overhead

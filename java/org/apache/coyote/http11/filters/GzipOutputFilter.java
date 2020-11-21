@@ -16,16 +16,16 @@
  */
 package org.apache.coyote.http11.filters;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.util.zip.GZIPOutputStream;
-
 import org.apache.coyote.Response;
 import org.apache.coyote.http11.HttpOutputBuffer;
 import org.apache.coyote.http11.OutputFilter;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Gzip output filter.
@@ -142,23 +142,27 @@ public class GzipOutputFilter implements OutputFilter {
 
 
     protected class FakeOutputStream
-        extends OutputStream {
+            extends OutputStream {
         protected final ByteBuffer outputChunk = ByteBuffer.allocate(1);
+
         @Override
         public void write(int b)
-            throws IOException {
+                throws IOException {
             // Shouldn't get used for good performance, but is needed for
             // compatibility with Sun JDK 1.4.0
             outputChunk.put(0, (byte) (b & 0xff));
             buffer.doWrite(outputChunk);
         }
+
         @Override
         public void write(byte[] b, int off, int len)
-            throws IOException {
+                throws IOException {
             buffer.doWrite(ByteBuffer.wrap(b, off, len));
         }
+
         @Override
         public void flush() throws IOException {/*NOOP*/}
+
         @Override
         public void close() throws IOException {/*NOOP*/}
     }

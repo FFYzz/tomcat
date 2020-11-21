@@ -16,11 +16,6 @@
  */
 package org.apache.coyote.http11.upgrade;
 
-import java.io.IOException;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.WriteListener;
-
 import org.apache.coyote.ContainerThreadMarker;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
@@ -28,6 +23,10 @@ import org.apache.tomcat.util.ExceptionUtils;
 import org.apache.tomcat.util.net.DispatchType;
 import org.apache.tomcat.util.net.SocketWrapperBase;
 import org.apache.tomcat.util.res.StringManager;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
+import java.io.IOException;
 
 public class UpgradeServletOutputStream extends ServletOutputStream {
 
@@ -61,9 +60,8 @@ public class UpgradeServletOutputStream extends ServletOutputStream {
     private boolean registered = false;
 
 
-
     public UpgradeServletOutputStream(UpgradeProcessorBase processor, SocketWrapperBase<?> socketWrapper,
-            UpgradeInfo upgradeInfo) {
+                                      UpgradeInfo upgradeInfo) {
         this.processor = processor;
         this.socketWrapper = socketWrapper;
         this.upgradeInfo = upgradeInfo;
@@ -88,7 +86,7 @@ public class UpgradeServletOutputStream extends ServletOutputStream {
                 // for write and multiple registrations will cause problems.
                 registered = true;
                 return false;
-            } else if (registered){
+            } else if (registered) {
                 // The socket is already registered for write and multiple
                 // registrations will cause problems.
                 return false;
@@ -138,7 +136,7 @@ public class UpgradeServletOutputStream extends ServletOutputStream {
     public void write(int b) throws IOException {
         synchronized (writeLock) {
             preWriteChecks();
-            writeInternal(new byte[] { (byte) b }, 0, 1);
+            writeInternal(new byte[]{(byte) b}, 0, 1);
         }
     }
 

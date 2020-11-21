@@ -19,9 +19,8 @@
 package org.apache.tomcat.util.modeler;
 
 
-import java.io.Serializable;
-
 import javax.management.MBeanFeatureInfo;
+import java.io.Serializable;
 
 
 /**
@@ -58,7 +57,7 @@ public class FeatureInfo implements Serializable {
 
     /**
      * @return the name of this feature, which must be unique among features
-     *  in the same collection.
+     * in the same collection.
      */
     public String getName() {
         return this.name;

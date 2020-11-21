@@ -16,9 +16,8 @@
  */
 package org.apache.naming;
 
-import java.util.Vector;
-
 import javax.naming.StringRefAddr;
+import java.util.Vector;
 
 /**
  * Represents a reference web service.
@@ -40,13 +39,13 @@ public class ServiceRef extends AbstractRef {
     /**
      * Service Classname address type.
      */
-    public static final String SERVICE_INTERFACE  = "serviceInterface";
+    public static final String SERVICE_INTERFACE = "serviceInterface";
 
 
     /**
      * ServiceQname address type.
      */
-    public static final String SERVICE_NAMESPACE  = "service namespace";
+    public static final String SERVICE_NAMESPACE = "service namespace";
     public static final String SERVICE_LOCAL_PART = "service local part";
 
 
@@ -82,16 +81,16 @@ public class ServiceRef extends AbstractRef {
 
 
     public ServiceRef(String refname, String serviceInterface, String[] serviceQname,
-                       String wsdl, String jaxrpcmapping) {
+                      String wsdl, String jaxrpcmapping) {
         this(refname, serviceInterface, serviceQname, wsdl, jaxrpcmapping,
-                        null, null);
+                null, null);
     }
 
 
     public ServiceRef(@SuppressWarnings("unused") String refname,
-                       String serviceInterface, String[] serviceQname,
-                       String wsdl, String jaxrpcmapping,
-                       String factory, String factoryLocation) {
+                      String serviceInterface, String[] serviceQname,
+                      String wsdl, String jaxrpcmapping,
+                      String factory, String factoryLocation) {
         super(serviceInterface, factory, factoryLocation);
         StringRefAddr refAddr = null;
         if (serviceInterface != null) {
@@ -119,6 +118,7 @@ public class ServiceRef extends AbstractRef {
 
     /**
      * Add and Get Handlers classes.
+     *
      * @return the handler
      */
     public HandlerRef getHandler() {

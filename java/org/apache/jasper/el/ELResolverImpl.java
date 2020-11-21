@@ -17,15 +17,10 @@
 
 package org.apache.jasper.el;
 
+import javax.el.*;
+import javax.servlet.jsp.el.VariableResolver;
 import java.util.Iterator;
 import java.util.Objects;
-
-import javax.el.ELContext;
-import javax.el.ELException;
-import javax.el.ELResolver;
-import javax.el.ExpressionFactory;
-import javax.el.PropertyNotWritableException;
-import javax.servlet.jsp.el.VariableResolver;
 
 @Deprecated
 public final class ELResolverImpl extends ELResolver {
@@ -34,7 +29,7 @@ public final class ELResolverImpl extends ELResolver {
     private final ELResolver elResolver;
 
     public ELResolverImpl(VariableResolver variableResolver,
-            ExpressionFactory factory) {
+                          ExpressionFactory factory) {
         this.variableResolver = variableResolver;
         this.elResolver = ELContextImpl.getDefaultResolver(factory);
     }
@@ -86,7 +81,7 @@ public final class ELResolverImpl extends ELResolver {
 
     @Override
     public void setValue(ELContext context, Object base, Object property,
-            Object value) {
+                         Object value) {
         Objects.requireNonNull(context);
 
         if (base == null) {

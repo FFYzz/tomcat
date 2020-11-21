@@ -16,10 +16,10 @@
  */
 package org.apache.tomcat.util.net;
 
+import org.apache.tomcat.util.buf.ByteBufferUtils;
+
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
-
-import org.apache.tomcat.util.buf.ByteBufferUtils;
 
 public class SocketBufferHandler {
 
@@ -27,6 +27,7 @@ public class SocketBufferHandler {
         @Override
         public void expand(int newSize) {
         }
+
         /*
          * Http2AsyncParser$FrameCompletionHandler will return incomplete
          * frame(s) to the buffer. If the previous frame (or concurrent write to
@@ -49,7 +50,7 @@ public class SocketBufferHandler {
     private final boolean direct;
 
     public SocketBufferHandler(int readBufferSize, int writeBufferSize,
-            boolean direct) {
+                               boolean direct) {
         this.direct = direct;
         if (direct) {
             readBuffer = ByteBuffer.allocateDirect(readBufferSize);

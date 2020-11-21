@@ -16,11 +16,7 @@
  */
 package org.apache.tomcat.util.descriptor.web;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -53,9 +49,9 @@ public class ContextHandler extends ResourceBase {
     /**
      * A list of QName specifying the SOAP Headers the handler will work on.
      * -namespace and localpart values must be found inside the WSDL.
-     *
+     * <p>
      * A service-qname is composed by a namespaceURI and a localpart.
-     *
+     * <p>
      * soapHeader[0] : namespaceURI
      * soapHeader[1] : localpart
      */
@@ -75,7 +71,8 @@ public class ContextHandler extends ResourceBase {
 
     /**
      * Set a configured property.
-     * @param name The property name
+     *
+     * @param name  The property name
      * @param value The property value
      */
     public void setProperty(String name, String value) {

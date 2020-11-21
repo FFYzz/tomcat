@@ -16,27 +16,26 @@
  */
 package org.apache.tomcat.websocket.pojo;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import org.apache.tomcat.websocket.WsSession;
 
 import javax.websocket.DecodeException;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
-
-import org.apache.tomcat.websocket.WsSession;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Common implementation code for the POJO whole message handlers. All the real
  * work is done in this class and in the superclass.
  *
- * @param <T>   The type of message to handle
+ * @param <T> The type of message to handle
  */
 public abstract class PojoMessageHandlerWholeBase<T>
         extends PojoMessageHandlerBase<T> implements MessageHandler.Whole<T> {
 
     public PojoMessageHandlerWholeBase(Object pojo, Method method,
-            Session session, Object[] params, int indexPayload,
-            boolean convert, int indexSession, long maxMessageSize) {
+                                       Session session, Object[] params, int indexPayload,
+                                       boolean convert, int indexSession, long maxMessageSize) {
         super(pojo, method, session, params, indexPayload, convert,
                 indexSession, maxMessageSize);
     }
@@ -90,5 +89,6 @@ public abstract class PojoMessageHandlerWholeBase<T>
 
 
     protected abstract Object decode(T message) throws DecodeException;
+
     protected abstract void onClose();
 }

@@ -16,12 +16,6 @@
  */
 package org.apache.coyote.http11;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-
 import org.apache.coyote.CloseNowException;
 import org.apache.coyote.InputBuffer;
 import org.apache.coyote.Request;
@@ -34,6 +28,12 @@ import org.apache.tomcat.util.http.parser.HttpParser;
 import org.apache.tomcat.util.net.ApplicationBufferHandler;
 import org.apache.tomcat.util.net.SocketWrapperBase;
 import org.apache.tomcat.util.res.StringManager;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 /**
  * InputBuffer for HTTP that provides request header parsing as well as transfer
@@ -154,7 +154,7 @@ public class Http11InputBuffer implements InputBuffer, ApplicationBufferHandler 
     // ----------------------------------------------------------- Constructors
 
     public Http11InputBuffer(Request request, int headerBufferSize,
-            boolean rejectIllegalHeader, HttpParser httpParser) {
+                             boolean rejectIllegalHeader, HttpParser httpParser) {
 
         this.request = request;
         headers = request.getMimeHeaders();
@@ -330,12 +330,11 @@ public class Http11InputBuffer implements InputBuffer, ApplicationBufferHandler 
      * HTTP request header parsing. Do NOT attempt to read the request body
      * using it.
      *
-     * @throws IOException If an exception occurs during the underlying socket
-     * read operations, or if the given buffer is not big enough to accommodate
-     * the whole line.
-     *
      * @return true if data is properly fed; false if no data is available
      * immediately and thread should be freed
+     * @throws IOException If an exception occurs during the underlying socket
+     *                     read operations, or if the given buffer is not big enough to accommodate
+     *                     the whole line.
      */
     boolean parseRequestLine(boolean keptAlive, int connectionTimeout, int keepAliveTimeout)
             throws IOException {
@@ -753,14 +752,13 @@ public class Http11InputBuffer implements InputBuffer, ApplicationBufferHandler 
     }
 
 
-
     // --------------------------------------------------------- Private Methods
 
     /**
      * Attempts to read some data into the input buffer.
      *
      * @return <code>true</code> if more data was added to the input buffer
-     *         otherwise <code>false</code>
+     * otherwise <code>false</code>
      */
     private boolean fill(boolean block) throws IOException {
 
@@ -909,8 +907,8 @@ public class Http11InputBuffer implements InputBuffer, ApplicationBufferHandler 
         //
 
         while (headerParsePos == HeaderParsePosition.HEADER_VALUE_START ||
-               headerParsePos == HeaderParsePosition.HEADER_VALUE ||
-               headerParsePos == HeaderParsePosition.HEADER_MULTI_LINE) {
+                headerParsePos == HeaderParsePosition.HEADER_VALUE ||
+                headerParsePos == HeaderParsePosition.HEADER_MULTI_LINE) {
 
             if (headerParsePos == HeaderParsePosition.HEADER_VALUE_START) {
                 // Skipping spaces
@@ -1127,6 +1125,7 @@ public class Http11InputBuffer implements InputBuffer, ApplicationBufferHandler 
          * header name and is created after the name has been parsed.
          */
         MessageBytes headerValue = null;
+
         public void recycle() {
             lineStart = 0;
             start = 0;

@@ -16,9 +16,9 @@
  */
 package org.apache.tomcat.util.buf;
 
-import java.io.Serializable;
-
 import org.apache.tomcat.util.res.StringManager;
+
+import java.io.Serializable;
 
 /**
  * Base class for the *Chunk implementation to reduce duplication.
@@ -129,13 +129,14 @@ public abstract class AbstractChunk implements Cloneable, Serializable {
         // Look for first char
         int srcEnd = srcOff + srcLen;
 
-        mainLoop: for (int i = myOff + start; i <= (end - srcLen); i++) {
+        mainLoop:
+        for (int i = myOff + start; i <= (end - srcLen); i++) {
             if (getBufferElement(i) != first) {
                 continue;
             }
             // found first char, now look for a match
             int myPos = i + 1;
-            for (int srcPos = srcOff + 1; srcPos < srcEnd;) {
+            for (int srcPos = srcOff + 1; srcPos < srcEnd; ) {
                 if (getBufferElement(myPos++) != src.charAt(srcPos++)) {
                     continue mainLoop;
                 }

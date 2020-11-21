@@ -91,7 +91,7 @@ public class OneLineFormatter extends Formatter {
         final String cachedTimeFormat;
 
         if (timeFormat.endsWith(".SSS")) {
-            cachedTimeFormat = timeFormat.substring(0,  timeFormat.length() - 4);
+            cachedTimeFormat = timeFormat.substring(0, timeFormat.length() - 4);
             millisHandling = MillisHandling.APPEND;
         } else if (timeFormat.contains("SSS")) {
             millisHandling = MillisHandling.REPLACE_SSS;
@@ -229,7 +229,7 @@ public class OneLineFormatter extends Formatter {
      * int in LogRecord for a long value and the resulting mess that follows.
      */
     private static String getThreadName(int logRecordThreadId) {
-        Map<Integer,String> cache = threadNameCache.get();
+        Map<Integer, String> cache = threadNameCache.get();
         String result = null;
 
         if (logRecordThreadId > (Integer.MAX_VALUE / 2)) {
@@ -265,7 +265,7 @@ public class OneLineFormatter extends Formatter {
     }
 
 
-    private static class ThreadNameCache extends LinkedHashMap<Integer,String> {
+    private static class ThreadNameCache extends LinkedHashMap<Integer, String> {
 
         private static final long serialVersionUID = 1L;
 

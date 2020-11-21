@@ -16,6 +16,11 @@
  */
 package org.apache.tomcat.websocket;
 
+import org.apache.tomcat.util.res.StringManager;
+
+import javax.websocket.Extension;
+import javax.websocket.Extension.Parameter;
+import javax.websocket.SendHandler;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -23,12 +28,6 @@ import java.util.List;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
-
-import javax.websocket.Extension;
-import javax.websocket.Extension.Parameter;
-import javax.websocket.SendHandler;
-
-import org.apache.tomcat.util.res.StringManager;
 
 public class PerMessageDeflate implements Transformation {
 
@@ -40,7 +39,7 @@ public class PerMessageDeflate implements Transformation {
     private static final String CLIENT_MAX_WINDOW_BITS = "client_max_window_bits";
 
     private static final int RSV_BITMASK = 0b100;
-    private static final byte[] EOM_BYTES = new byte[] {0, 0, -1, -1};
+    private static final byte[] EOM_BYTES = new byte[]{0, 0, -1, -1};
 
     public static final String NAME = "permessage-deflate";
 
@@ -78,7 +77,7 @@ public class PerMessageDeflate implements Transformation {
                         // Duplicate definition
                         throw new IllegalArgumentException(sm.getString(
                                 "perMessageDeflate.duplicateParameter",
-                                SERVER_NO_CONTEXT_TAKEOVER ));
+                                SERVER_NO_CONTEXT_TAKEOVER));
                     }
                 } else if (CLIENT_NO_CONTEXT_TAKEOVER.equals(param.getName())) {
                     if (clientContextTakeover) {
@@ -87,7 +86,7 @@ public class PerMessageDeflate implements Transformation {
                         // Duplicate definition
                         throw new IllegalArgumentException(sm.getString(
                                 "perMessageDeflate.duplicateParameter",
-                                CLIENT_NO_CONTEXT_TAKEOVER ));
+                                CLIENT_NO_CONTEXT_TAKEOVER));
                     }
                 } else if (SERVER_MAX_WINDOW_BITS.equals(param.getName())) {
                     if (serverMaxWindowBits == -1) {
@@ -113,7 +112,7 @@ public class PerMessageDeflate implements Transformation {
                         // Duplicate definition
                         throw new IllegalArgumentException(sm.getString(
                                 "perMessageDeflate.duplicateParameter",
-                                SERVER_MAX_WINDOW_BITS ));
+                                SERVER_MAX_WINDOW_BITS));
                     }
                 } else if (CLIENT_MAX_WINDOW_BITS.equals(param.getName())) {
                     if (clientMaxWindowBits == -1) {
@@ -147,7 +146,7 @@ public class PerMessageDeflate implements Transformation {
                         // Duplicate definition
                         throw new IllegalArgumentException(sm.getString(
                                 "perMessageDeflate.duplicateParameter",
-                                CLIENT_MAX_WINDOW_BITS ));
+                                CLIENT_MAX_WINDOW_BITS));
                     }
                 } else {
                     // Unknown parameter
@@ -166,7 +165,7 @@ public class PerMessageDeflate implements Transformation {
 
 
     private PerMessageDeflate(boolean serverContextTakeover, int serverMaxWindowBits,
-            boolean clientContextTakeover, int clientMaxWindowBits, boolean isServer) {
+                              boolean clientContextTakeover, int clientMaxWindowBits, boolean isServer) {
         this.serverContextTakeover = serverContextTakeover;
         this.serverMaxWindowBits = serverMaxWindowBits;
         this.clientContextTakeover = clientContextTakeover;
@@ -209,7 +208,7 @@ public class PerMessageDeflate implements Transformation {
             }
             dest.position(dest.position() + written);
 
-            if (inflater.needsInput() && !usedEomBytes ) {
+            if (inflater.needsInput() && !usedEomBytes) {
                 if (dest.hasRemaining()) {
                     readBuffer.clear();
                     TransformationResult nextResult =

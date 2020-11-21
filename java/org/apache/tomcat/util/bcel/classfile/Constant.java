@@ -17,17 +17,17 @@
  */
 package org.apache.tomcat.util.bcel.classfile;
 
+import org.apache.tomcat.util.bcel.Const;
+
 import java.io.DataInput;
 import java.io.IOException;
-
-import org.apache.tomcat.util.bcel.Const;
 
 /**
  * Abstract superclass for classes to represent the different constant types
  * in the constant pool of a class file. The classes keep closely to
  * the JVM specification.
  *
- * @author  <A HREF="mailto:m.dahm@gmx.de">M. Dahm</A>
+ * @author <A HREF="mailto:m.dahm@gmx.de">M. Dahm</A>
  */
 public abstract class Constant {
 
@@ -58,7 +58,7 @@ public abstract class Constant {
      *
      * @param dataInput Input stream
      * @return Constant object
-     * @throws IOException if an I/O error occurs reading from the given {@code dataInput}.
+     * @throws IOException          if an I/O error occurs reading from the given {@code dataInput}.
      * @throws ClassFormatException if the next byte is not recognized
      */
     static Constant readConstant(final DataInput dataInput) throws IOException, ClassFormatException {

@@ -17,16 +17,10 @@
 
 package org.apache.el.lang;
 
+import javax.el.*;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.el.ELContext;
-import javax.el.ELResolver;
-import javax.el.EvaluationListener;
-import javax.el.FunctionMapper;
-import javax.el.ImportHandler;
-import javax.el.VariableMapper;
 
 public final class EvaluationContext extends ELContext {
 
@@ -37,7 +31,7 @@ public final class EvaluationContext extends ELContext {
     private final VariableMapper varMapper;
 
     public EvaluationContext(ELContext elContext, FunctionMapper fnMapper,
-            VariableMapper varMapper) {
+                             VariableMapper varMapper) {
         this.elContext = elContext;
         this.fnMapper = fnMapper;
         this.varMapper = varMapper;
@@ -76,7 +70,7 @@ public final class EvaluationContext extends ELContext {
     @Override
     // Can't use Class<?> because API needs to match specification in superclass
     public void putContext(@SuppressWarnings("rawtypes") Class key,
-            Object contextObject) {
+                           Object contextObject) {
         elContext.putContext(key, contextObject);
     }
 
@@ -88,7 +82,7 @@ public final class EvaluationContext extends ELContext {
     @Override
     public Locale getLocale() {
         return elContext.getLocale();
-        }
+    }
 
     @Override
     public void setLocale(Locale locale) {

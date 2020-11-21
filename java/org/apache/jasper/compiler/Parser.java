@@ -16,15 +16,6 @@
  */
 package org.apache.jasper.compiler;
 
-import java.io.CharArrayWriter;
-import java.io.FileNotFoundException;
-import java.util.Collection;
-
-import javax.servlet.jsp.tagext.TagAttributeInfo;
-import javax.servlet.jsp.tagext.TagFileInfo;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
-
 import org.apache.jasper.JasperException;
 import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.util.UniqueAttributesImpl;
@@ -32,6 +23,14 @@ import org.apache.tomcat.Jar;
 import org.apache.tomcat.util.descriptor.tld.TldResourcePath;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
+
+import javax.servlet.jsp.tagext.TagAttributeInfo;
+import javax.servlet.jsp.tagext.TagFileInfo;
+import javax.servlet.jsp.tagext.TagInfo;
+import javax.servlet.jsp.tagext.TagLibraryInfo;
+import java.io.CharArrayWriter;
+import java.io.FileNotFoundException;
+import java.util.Collection;
 
 /**
  * This class implements a parser for a JSP page (non-xml view). JSP page
@@ -68,13 +67,13 @@ class Parser implements TagConstants {
     // Virtual body content types, to make parsing a little easier.
     // These are not accessible from outside the parser.
     private static final String JAVAX_BODY_CONTENT_PARAM =
-        "JAVAX_BODY_CONTENT_PARAM";
+            "JAVAX_BODY_CONTENT_PARAM";
 
     private static final String JAVAX_BODY_CONTENT_PLUGIN =
-        "JAVAX_BODY_CONTENT_PLUGIN";
+            "JAVAX_BODY_CONTENT_PLUGIN";
 
     private static final String JAVAX_BODY_CONTENT_TEMPLATE_TEXT =
-        "JAVAX_BODY_CONTENT_TEMPLATE_TEXT";
+            "JAVAX_BODY_CONTENT_TEMPLATE_TEXT";
 
     /* System property that controls if the strict white space rules are
      * applied.
@@ -83,11 +82,12 @@ class Parser implements TagConstants {
             System.getProperty(
                     "org.apache.jasper.compiler.Parser.STRICT_WHITESPACE",
                     "true"));
+
     /**
      * The constructor
      */
     private Parser(ParserController pc, JspReader reader, boolean isTagFile,
-            boolean directivesOnly, Jar jar) {
+                   boolean directivesOnly, Jar jar) {
         this.parserController = pc;
         this.ctxt = pc.getJspCompilationContext();
         this.pageInfo = pc.getCompiler().getPageInfo();
@@ -103,25 +103,24 @@ class Parser implements TagConstants {
     /**
      * The main entry for Parser
      *
-     * @param pc  The ParseController, use for getting other objects in compiler
-     *            and for parsing included pages
-     * @param reader To read the page
-     * @param parent The parent node to this page, null for top level page
-     * @param isTagFile Is the page being parsed a tag file?
-     * @param directivesOnly Should only directives be parsed?
-     * @param jar JAR, if any, that this page was loaded from
-     * @param pageEnc The encoding of the source
-     * @param jspConfigPageEnc The encoding for the page
+     * @param pc                    The ParseController, use for getting other objects in compiler
+     *                              and for parsing included pages
+     * @param reader                To read the page
+     * @param parent                The parent node to this page, null for top level page
+     * @param isTagFile             Is the page being parsed a tag file?
+     * @param directivesOnly        Should only directives be parsed?
+     * @param jar                   JAR, if any, that this page was loaded from
+     * @param pageEnc               The encoding of the source
+     * @param jspConfigPageEnc      The encoding for the page
      * @param isDefaultPageEncoding Is the page encoding the default?
-     * @param isBomPresent Is a BOM present in the source
+     * @param isBomPresent          Is a BOM present in the source
      * @return list of nodes representing the parsed page
-     *
      * @throws JasperException If an error occurs during parsing
      */
     public static Node.Nodes parse(ParserController pc, JspReader reader,
-            Node parent, boolean isTagFile, boolean directivesOnly,
-            Jar jar, String pageEnc, String jspConfigPageEnc,
-            boolean isDefaultPageEncoding, boolean isBomPresent)
+                                   Node parent, boolean isTagFile, boolean directivesOnly,
+                                   Jar jar, String pageEnc, String jspConfigPageEnc,
+                                   boolean isDefaultPageEncoding, boolean isBomPresent)
             throws JasperException {
 
         Parser parser = new Parser(pc, reader, isTagFile, directivesOnly, jar);
@@ -158,6 +157,7 @@ class Parser implements TagConstants {
     Attributes parseAttributes() throws JasperException {
         return parseAttributes(false);
     }
+
     Attributes parseAttributes(boolean pageDirective) throws JasperException {
         UniqueAttributesImpl attrs = new UniqueAttributesImpl(pageDirective);
 
@@ -183,15 +183,13 @@ class Parser implements TagConstants {
     /**
      * Parse Attributes for a reader, provided for external use
      *
-     * @param pc The parser
+     * @param pc     The parser
      * @param reader The source
-     *
      * @return The parsed attributes
-     *
      * @throws JasperException If an error occurs during parsing
      */
     public static Attributes parseAttributes(ParserController pc,
-            JspReader reader) throws JasperException {
+                                             JspReader reader) throws JasperException {
         Parser tmpParser = new Parser(pc, reader, false, false, null);
         return tmpParser.parseAttributes(true);
     }
@@ -292,7 +290,7 @@ class Parser implements TagConstants {
             // If watch is longer than 1 character this is a scripting
             // expression and EL is always ignored
             boolean isElIgnored =
-                pageInfo.isELIgnored() || watch.length() > 1;
+                    pageInfo.isELIgnored() || watch.length() > 1;
 
             ret = AttributeParser.getUnquoted(reader.getText(start, stop),
                     quote, isElIgnored,
@@ -1020,12 +1018,12 @@ class Parser implements TagConstants {
     /**
      * Attempts to parse 'JspAttributeAndBody' production. Returns true if it
      * matched, or false if not. Assumes EmptyBody is okay as well.
-     *
+     * <p>
      * JspAttributeAndBody ::= ( '>' # S? ( '<jsp:attribute' NamedAttributes )? '<jsp:body' (
      * JspBodyBody | <TRANSLATION_ERROR> ) S? ETag )
      */
     private boolean parseJspAttributeAndBody(Node parent, String tag,
-            String bodyType) throws JasperException {
+                                             String bodyType) throws JasperException {
         boolean result = false;
 
         if (reader.matchesOptionalSpacesFollowedBy("<jsp:attribute")) {
@@ -1379,7 +1377,7 @@ class Parser implements TagConstants {
                     ttext.write(text, 0, text.length());
                 } else if (ch == '\\') {
                     int next = reader.peekChar(0);
-                    if (next == '$' || next =='#') {
+                    if (next == '$' || next == '#') {
                         ttext.write(reader.nextChar());
                     } else {
                         ttext.write('\\');

@@ -16,6 +16,12 @@
  */
 package org.apache.coyote.http11.filters;
 
+import org.apache.coyote.Response;
+import org.apache.coyote.http11.HttpOutputBuffer;
+import org.apache.coyote.http11.OutputFilter;
+import org.apache.tomcat.util.buf.HexUtils;
+import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
+
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.ByteBuffer;
@@ -25,12 +31,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
-
-import org.apache.coyote.Response;
-import org.apache.coyote.http11.HttpOutputBuffer;
-import org.apache.coyote.http11.OutputFilter;
-import org.apache.tomcat.util.buf.HexUtils;
-import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 
 /**
  * Chunked output filter.
@@ -42,7 +42,7 @@ public class ChunkedOutputFilter implements OutputFilter {
     private static final byte[] LAST_CHUNK_BYTES = {(byte) '0', (byte) '\r', (byte) '\n'};
     private static final byte[] CRLF_BYTES = {(byte) '\r', (byte) '\n'};
     private static final byte[] END_CHUNK_BYTES =
-        {(byte) '0', (byte) '\r', (byte) '\n', (byte) '\r', (byte) '\n'};
+            {(byte) '0', (byte) '\r', (byte) '\n', (byte) '\r', (byte) '\n'};
 
     private static final Set<String> disallowedTrailerFieldNames = new HashSet<>();
 
@@ -161,8 +161,8 @@ public class ChunkedOutputFilter implements OutputFilter {
     @Override
     public void end() throws IOException {
 
-        Supplier<Map<String,String>> trailerFieldsSupplier = response.getTrailerFields();
-        Map<String,String> trailerFields = null;
+        Supplier<Map<String, String>> trailerFieldsSupplier = response.getTrailerFields();
+        Map<String, String> trailerFields = null;
 
         if (trailerFieldsSupplier != null) {
             trailerFields = trailerFieldsSupplier.get();
@@ -176,9 +176,9 @@ public class ChunkedOutputFilter implements OutputFilter {
             buffer.doWrite(lastChunk);
             lastChunk.position(0).limit(lastChunk.capacity());
 
-           ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-           OutputStreamWriter osw = new OutputStreamWriter(baos, StandardCharsets.ISO_8859_1);
-            for (Map.Entry<String,String> trailerField : trailerFields.entrySet()) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+            OutputStreamWriter osw = new OutputStreamWriter(baos, StandardCharsets.ISO_8859_1);
+            for (Map.Entry<String, String> trailerField : trailerFields.entrySet()) {
                 // Ignore disallowed headers
                 if (disallowedTrailerFieldNames.contains(
                         trailerField.getKey().toLowerCase(Locale.ENGLISH))) {

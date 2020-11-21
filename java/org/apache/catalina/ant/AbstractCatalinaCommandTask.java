@@ -16,10 +16,10 @@
  */
 package org.apache.catalina.ant;
 
+import org.apache.tools.ant.BuildException;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-
-import org.apache.tools.ant.BuildException;
 
 public abstract class AbstractCatalinaCommandTask extends AbstractCatalinaTask {
 
@@ -56,10 +56,8 @@ public abstract class AbstractCatalinaCommandTask extends AbstractCatalinaTask {
      * Create query string for the specified command.
      *
      * @param command Command to be executed
-     *
      * @return The generated query string
-     *
-     * @exception BuildException if an error occurs
+     * @throws BuildException if an error occurs
      */
     public StringBuilder createQueryString(String command) throws BuildException {
         StringBuilder buffer = new StringBuilder();

@@ -16,14 +16,14 @@
  */
 package org.apache.tomcat.util.net;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.jni.Error;
 import org.apache.tomcat.util.ExceptionUtils;
 import org.apache.tomcat.util.res.StringManager;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class Acceptor<U> implements Runnable {
 
@@ -33,7 +33,7 @@ public class Acceptor<U> implements Runnable {
     private static final int INITIAL_ERROR_DELAY = 50;
     private static final int MAX_ERROR_DELAY = 1600;
 
-    private final AbstractEndpoint<?,U> endpoint;
+    private final AbstractEndpoint<?, U> endpoint;
     private String threadName;
     /*
      * Tracked separately rather than using endpoint.isRunning() as calls to
@@ -45,7 +45,7 @@ public class Acceptor<U> implements Runnable {
     protected volatile AcceptorState state = AcceptorState.NEW;
 
 
-    public Acceptor(AbstractEndpoint<?,U> endpoint) {
+    public Acceptor(AbstractEndpoint<?, U> endpoint) {
         this.endpoint = endpoint;
     }
 
@@ -145,7 +145,7 @@ public class Acceptor<U> implements Runnable {
                             log.error(msg, t);
                         }
                     } else {
-                            log.error(msg, t);
+                        log.error(msg, t);
                     }
                 }
             }
@@ -160,7 +160,7 @@ public class Acceptor<U> implements Runnable {
         stopCalled = true;
         try {
             if (!stopLatch.await(10, TimeUnit.SECONDS)) {
-               log.warn(sm.getString("acceptor.stop.fail", getThreadName()));
+                log.warn(sm.getString("acceptor.stop.fail", getThreadName()));
             }
         } catch (InterruptedException e) {
             log.warn(sm.getString("acceptor.stop.interrupted", getThreadName()), e);
@@ -175,7 +175,7 @@ public class Acceptor<U> implements Runnable {
      * files is reached.
      *
      * @param currentErrorDelay The current delay being applied on failure
-     * @return  The delay to apply on the next failure
+     * @return The delay to apply on the next failure
      */
     protected int handleExceptionWithDelay(int currentErrorDelay) {
         // Don't delay on first exception

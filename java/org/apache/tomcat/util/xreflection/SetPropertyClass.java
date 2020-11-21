@@ -16,12 +16,12 @@
  */
 package org.apache.tomcat.util.xreflection;
 
+import org.apache.tomcat.util.IntrospectionUtils;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.apache.tomcat.util.IntrospectionUtils;
 
 final class SetPropertyClass {
 
@@ -125,18 +125,17 @@ final class SetPropertyClass {
     }
 
 
-
     public String generateSetPropertyMethod(ReflectionProperty property) {
         //this property has a setProperty method
         if (property.hasSetPropertySetter()) {
-            return "((" + this.getClazz().getName().replace('$','.') + ")" + OBJECT_VAR_NAME + ")." +
-                property.getSetMethod().getName() + "(" + NAME_VAR_NAME + ", " + VALUE_VAR_NAME + ");";
+            return "((" + this.getClazz().getName().replace('$', '.') + ")" + OBJECT_VAR_NAME + ")." +
+                    property.getSetMethod().getName() + "(" + NAME_VAR_NAME + ", " + VALUE_VAR_NAME + ");";
         }
 
         //direct setter
         if (property.hasSetter()) {
-            return "((" + this.getClazz().getName().replace('$','.') + ")" + OBJECT_VAR_NAME + ")." +
-                property.getSetMethod().getName() + "(" + property.getConversion(VALUE_VAR_NAME) + ");";
+            return "((" + this.getClazz().getName().replace('$', '.') + ")" + OBJECT_VAR_NAME + ")." +
+                    property.getSetMethod().getName() + "(" + property.getConversion(VALUE_VAR_NAME) + ");";
         }
         return null;
     }
@@ -144,93 +143,92 @@ final class SetPropertyClass {
     public String generateGetPropertyMethod(ReflectionProperty property) {
         //this property has a getProperty method
         if (property.hasGetPropertyGetter()) {
-            return "result = ((" + this.getClazz().getName().replace('$','.') + ")" + OBJECT_VAR_NAME + ")." +
-                property.getGetMethod().getName() + "(" + NAME_VAR_NAME + ");";
+            return "result = ((" + this.getClazz().getName().replace('$', '.') + ")" + OBJECT_VAR_NAME + ")." +
+                    property.getGetMethod().getName() + "(" + NAME_VAR_NAME + ");";
         }
 
         //direct getter
         if (property.hasGetter()) {
-            return "result = ((" + this.getClazz().getName().replace('$','.') + ")" + OBJECT_VAR_NAME + ")." +
-                property.getGetMethod().getName() + "();";
+            return "result = ((" + this.getClazz().getName().replace('$', '.') + ")" + OBJECT_VAR_NAME + ")." +
+                    property.getGetMethod().getName() + "();";
         }
         return null;
     }
 
     public String generateSetPropertyForMethod() {
         StringBuilder code = new StringBuilder(ReflectionLessCodeGenerator.getIndent(1))
-            .append(generatesSetPropertyForMethodHeader())
-            .append(System.lineSeparator())
-            .append(ReflectionLessCodeGenerator.getIndent(2))
-            .append("switch (")
-            .append(NAME_VAR_NAME)
-            .append(") {")
-            .append(System.lineSeparator());
+                .append(generatesSetPropertyForMethodHeader())
+                .append(System.lineSeparator())
+                .append(ReflectionLessCodeGenerator.getIndent(2))
+                .append("switch (")
+                .append(NAME_VAR_NAME)
+                .append(") {")
+                .append(System.lineSeparator());
 
         //case statements for each property
         for (ReflectionProperty property : getProperties()) {
             String invocation = generateSetPropertyMethod(property);
             if (invocation != null) {
                 code.append(ReflectionLessCodeGenerator.getIndent(3))
-                    .append("case \"")
-                    .append(property.getPropertyName())
-                    .append("\" : ")
-                    .append(System.lineSeparator());
+                        .append("case \"")
+                        .append(property.getPropertyName())
+                        .append("\" : ")
+                        .append(System.lineSeparator());
 
                 code.append(ReflectionLessCodeGenerator.getIndent(4))
-                    .append(invocation)
-                    .append(System.lineSeparator())
-                    .append(ReflectionLessCodeGenerator.getIndent(4))
-                    .append("return true;")
-                    .append(System.lineSeparator())
+                        .append(invocation)
+                        .append(System.lineSeparator())
+                        .append(ReflectionLessCodeGenerator.getIndent(4))
+                        .append("return true;")
+                        .append(System.lineSeparator())
                 ;
 
             } else {
                 code.append(ReflectionLessCodeGenerator.getIndent(3))
-                    .append("//no set" + IntrospectionUtils.capitalize(property.getPropertyName())+ " method found on this class")
-                    .append(System.lineSeparator())
-                    ;
+                        .append("//no set" + IntrospectionUtils.capitalize(property.getPropertyName()) + " method found on this class")
+                        .append(System.lineSeparator())
+                ;
             }
         }
 
 
-
         //end switch statement
         code.append(ReflectionLessCodeGenerator.getIndent(2))
-            .append("}")
-            .append(System.lineSeparator());
+                .append("}")
+                .append(System.lineSeparator());
 
         //we have a generic setProperty(String, String) method, invoke it
         if (getGenericSetPropertyMethod() != null) {
             ReflectionProperty p = new ReflectionProperty(
-                clazz.getName(),
-                "property",
-                String.class,
-                getGenericSetPropertyMethod(),
-                null
+                    clazz.getName(),
+                    "property",
+                    String.class,
+                    getGenericSetPropertyMethod(),
+                    null
             );
-           code.append(ReflectionLessCodeGenerator.getIndent(2))
-               .append("if (")
-               .append(SETP_VAR_NAME)
-               .append(") {")
-               .append(System.lineSeparator())
-               .append(ReflectionLessCodeGenerator.getIndent(3))
-               .append(generateSetPropertyMethod(p))
-               .append(System.lineSeparator())
-               .append(ReflectionLessCodeGenerator.getIndent(3))
-               .append("return true;")
-               .append(System.lineSeparator())
-               .append(ReflectionLessCodeGenerator.getIndent(2))
-               .append("}")
-               .append(System.lineSeparator());
+            code.append(ReflectionLessCodeGenerator.getIndent(2))
+                    .append("if (")
+                    .append(SETP_VAR_NAME)
+                    .append(") {")
+                    .append(System.lineSeparator())
+                    .append(ReflectionLessCodeGenerator.getIndent(3))
+                    .append(generateSetPropertyMethod(p))
+                    .append(System.lineSeparator())
+                    .append(ReflectionLessCodeGenerator.getIndent(3))
+                    .append("return true;")
+                    .append(System.lineSeparator())
+                    .append(ReflectionLessCodeGenerator.getIndent(2))
+                    .append("}")
+                    .append(System.lineSeparator());
         }
 
         //invoke parent or return false
         code.append(ReflectionLessCodeGenerator.getIndent(2))
-            .append("return ")
-            .append(getSetPropertyForExitStatement())
-            .append(System.lineSeparator())
-            .append(ReflectionLessCodeGenerator.getIndent(1))
-            .append("}");
+                .append("return ")
+                .append(getSetPropertyForExitStatement())
+                .append(System.lineSeparator())
+                .append(ReflectionLessCodeGenerator.getIndent(1))
+                .append("}");
 
         return code.toString();
     }
@@ -238,22 +236,22 @@ final class SetPropertyClass {
     private String getSetPropertyForExitStatement() {
 
         return (getParent() != null) ?
-            //invoke the parent if we have one
-            getParent().generateParentSetPropertyForMethodInvocation() :
-            //if we invoke setProperty, return true, return false otherwise
-            getGenericSetPropertyMethod() != null ? "true;" : "false;";
+                //invoke the parent if we have one
+                getParent().generateParentSetPropertyForMethodInvocation() :
+                //if we invoke setProperty, return true, return false otherwise
+                getGenericSetPropertyMethod() != null ? "true;" : "false;";
     }
 
     public String generateInvocationSetForPropertyCaseStatement(int level) {
         StringBuilder code = new StringBuilder(ReflectionLessCodeGenerator.getIndent(level))
-            .append("case \"")
-            .append(getClazz().getName())
-            .append("\" : ")
-            .append(System.lineSeparator())
-            .append(ReflectionLessCodeGenerator.getIndent(level+1))
-            .append("return ")
-            .append(generateParentSetPropertyForMethodInvocation())
-            .append(System.lineSeparator());
+                .append("case \"")
+                .append(getClazz().getName())
+                .append("\" : ")
+                .append(System.lineSeparator())
+                .append(ReflectionLessCodeGenerator.getIndent(level + 1))
+                .append("return ")
+                .append(generateParentSetPropertyForMethodInvocation())
+                .append(System.lineSeparator());
         return code.toString();
     }
 
@@ -264,14 +262,14 @@ final class SetPropertyClass {
             methodInvocation.append(IntrospectionUtils.capitalize(s));
         }
         methodInvocation.append("(")
-        .append(OBJECT_VAR_NAME)
-            .append(", ")
-            .append(NAME_VAR_NAME)
-            .append(", ")
-            .append(VALUE_VAR_NAME)
-            .append(", ")
-            .append(SETP_VAR_NAME)
-            .append(");");
+                .append(OBJECT_VAR_NAME)
+                .append(", ")
+                .append(NAME_VAR_NAME)
+                .append(", ")
+                .append(VALUE_VAR_NAME)
+                .append(", ")
+                .append(SETP_VAR_NAME)
+                .append(");");
         return methodInvocation.toString();
     }
 
@@ -282,31 +280,30 @@ final class SetPropertyClass {
             methodInvocation.append(IntrospectionUtils.capitalize(s));
         }
         methodInvocation.append("(Object ")
-            .append(OBJECT_VAR_NAME)
-            .append(", String ")
-            .append(NAME_VAR_NAME)
-            .append(", String ")
-            .append(VALUE_VAR_NAME)
-            .append(", boolean ")
-            .append(SETP_VAR_NAME)
-            .append(") {");
+                .append(OBJECT_VAR_NAME)
+                .append(", String ")
+                .append(NAME_VAR_NAME)
+                .append(", String ")
+                .append(VALUE_VAR_NAME)
+                .append(", boolean ")
+                .append(SETP_VAR_NAME)
+                .append(") {");
         return methodInvocation.toString();
     }
 
     public String generateInvocationGetForPropertyCaseStatement(int level) {
         StringBuilder code = new StringBuilder(ReflectionLessCodeGenerator.getIndent(level))
-            .append("case \"")
-            .append(getClazz().getName())
-            .append("\" : ")
-            .append(System.lineSeparator())
-            .append(ReflectionLessCodeGenerator.getIndent(level+1))
-            .append("result = ")
-            .append(generateParentGetPropertyForMethodInvocation())
-            .append(System.lineSeparator())
-            .append(ReflectionLessCodeGenerator.getIndent(level+1))
-            .append("break;")
-            .append(System.lineSeparator())
-            ;
+                .append("case \"")
+                .append(getClazz().getName())
+                .append("\" : ")
+                .append(System.lineSeparator())
+                .append(ReflectionLessCodeGenerator.getIndent(level + 1))
+                .append("result = ")
+                .append(generateParentGetPropertyForMethodInvocation())
+                .append(System.lineSeparator())
+                .append(ReflectionLessCodeGenerator.getIndent(level + 1))
+                .append("break;")
+                .append(System.lineSeparator());
         return code.toString();
     }
 
@@ -317,10 +314,10 @@ final class SetPropertyClass {
             methodInvocation.append(IntrospectionUtils.capitalize(s));
         }
         methodInvocation.append("(")
-            .append(OBJECT_VAR_NAME)
-            .append(", ")
-            .append(NAME_VAR_NAME)
-            .append(");");
+                .append(OBJECT_VAR_NAME)
+                .append(", ")
+                .append(NAME_VAR_NAME)
+                .append(");");
         return methodInvocation.toString();
     }
 
@@ -331,10 +328,10 @@ final class SetPropertyClass {
             methodInvocation.append(IntrospectionUtils.capitalize(s));
         }
         methodInvocation.append("(Object ")
-            .append(OBJECT_VAR_NAME)
-            .append(", String ")
-            .append(NAME_VAR_NAME)
-            .append(") {");
+                .append(OBJECT_VAR_NAME)
+                .append(", String ")
+                .append(NAME_VAR_NAME)
+                .append(") {");
         return methodInvocation.toString();
     }
 
@@ -348,87 +345,86 @@ final class SetPropertyClass {
 
     public String generateGetPropertyForMethod() {
         StringBuilder code = new StringBuilder(ReflectionLessCodeGenerator.getIndent(1))
-            .append(generatesGetPropertyForMethodHeader())
-            .append(System.lineSeparator())
-            .append(ReflectionLessCodeGenerator.getIndent(2))
-            .append("Object result = null;")
-            .append(System.lineSeparator())
-            .append(ReflectionLessCodeGenerator.getIndent(2))
-            .append("switch (")
-            .append(NAME_VAR_NAME)
-            .append(") {")
-            .append(System.lineSeparator());
+                .append(generatesGetPropertyForMethodHeader())
+                .append(System.lineSeparator())
+                .append(ReflectionLessCodeGenerator.getIndent(2))
+                .append("Object result = null;")
+                .append(System.lineSeparator())
+                .append(ReflectionLessCodeGenerator.getIndent(2))
+                .append("switch (")
+                .append(NAME_VAR_NAME)
+                .append(") {")
+                .append(System.lineSeparator());
 
         //case statements for each property
         for (ReflectionProperty property : getProperties()) {
             String invocation = generateGetPropertyMethod(property);
             if (invocation != null) {
                 code.append(ReflectionLessCodeGenerator.getIndent(3))
-                    .append("case \"")
-                    .append(property.getPropertyName())
-                    .append("\" : ")
-                    .append(System.lineSeparator());
+                        .append("case \"")
+                        .append(property.getPropertyName())
+                        .append("\" : ")
+                        .append(System.lineSeparator());
 
                 code.append(ReflectionLessCodeGenerator.getIndent(4))
-                    .append(invocation)
-                    .append(System.lineSeparator())
-                    .append(ReflectionLessCodeGenerator.getIndent(4))
-                    .append("break;")
-                    .append(System.lineSeparator())
+                        .append(invocation)
+                        .append(System.lineSeparator())
+                        .append(ReflectionLessCodeGenerator.getIndent(4))
+                        .append("break;")
+                        .append(System.lineSeparator())
                 ;
 
             } else {
                 code.append(ReflectionLessCodeGenerator.getIndent(3))
-                    .append("//no get" + IntrospectionUtils.capitalize(property.getPropertyName())+ " method found on this class")
-                    .append(System.lineSeparator())
+                        .append("//no get" + IntrospectionUtils.capitalize(property.getPropertyName()) + " method found on this class")
+                        .append(System.lineSeparator())
                 ;
             }
         }
 
         //end switch statement
         code.append(ReflectionLessCodeGenerator.getIndent(2))
-            .append("}")
-            .append(System.lineSeparator());
+                .append("}")
+                .append(System.lineSeparator());
 
         //invoke parent or return null
         code.append(ReflectionLessCodeGenerator.getIndent(2))
-            .append("if (result == null) {")
-            .append(System.lineSeparator())
-            .append(ReflectionLessCodeGenerator.getIndent(3))
-            .append("result = ")
-            .append(getGetPropertyForExitStatement())
-            .append(System.lineSeparator())
-            .append(ReflectionLessCodeGenerator.getIndent(2))
-            .append("}")
-            .append(System.lineSeparator())
-            ;
+                .append("if (result == null) {")
+                .append(System.lineSeparator())
+                .append(ReflectionLessCodeGenerator.getIndent(3))
+                .append("result = ")
+                .append(getGetPropertyForExitStatement())
+                .append(System.lineSeparator())
+                .append(ReflectionLessCodeGenerator.getIndent(2))
+                .append("}")
+                .append(System.lineSeparator())
+        ;
 
         //we have a generic getProperty(String, String) method, invoke it
         if (getGenericGetPropertyMethod() != null) {
             ReflectionProperty p = new ReflectionProperty(
-                clazz.getName(),
-                "property",
-                String.class,
-                null,
-                getGenericGetPropertyMethod()
+                    clazz.getName(),
+                    "property",
+                    String.class,
+                    null,
+                    getGenericGetPropertyMethod()
             );
             code.append(ReflectionLessCodeGenerator.getIndent(2))
-                .append("if (result == null) {")
-                .append(System.lineSeparator())
-                .append(ReflectionLessCodeGenerator.getIndent(3))
-                .append(generateGetPropertyMethod(p))
-                .append(System.lineSeparator())
-                .append(ReflectionLessCodeGenerator.getIndent(2))
-                .append("}")
-                .append(System.lineSeparator());
+                    .append("if (result == null) {")
+                    .append(System.lineSeparator())
+                    .append(ReflectionLessCodeGenerator.getIndent(3))
+                    .append(generateGetPropertyMethod(p))
+                    .append(System.lineSeparator())
+                    .append(ReflectionLessCodeGenerator.getIndent(2))
+                    .append("}")
+                    .append(System.lineSeparator());
         }
         code.append(ReflectionLessCodeGenerator.getIndent(2))
-            .append("return result;")
-            .append(System.lineSeparator())
-            .append(ReflectionLessCodeGenerator.getIndent(1))
-            .append("}")
-            .append(System.lineSeparator());
-
+                .append("return result;")
+                .append(System.lineSeparator())
+                .append(ReflectionLessCodeGenerator.getIndent(1))
+                .append("}")
+                .append(System.lineSeparator());
 
 
         return code.toString();

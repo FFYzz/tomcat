@@ -17,21 +17,15 @@
 
 package org.apache.tomcat.dbcp.dbcp2.managed;
 
-import java.sql.Connection;
-
-import javax.management.ObjectName;
-
-import org.apache.tomcat.dbcp.dbcp2.Constants;
-import org.apache.tomcat.dbcp.dbcp2.DelegatingPreparedStatement;
-import org.apache.tomcat.dbcp.dbcp2.PStmtKey;
-import org.apache.tomcat.dbcp.dbcp2.PoolableConnection;
-import org.apache.tomcat.dbcp.dbcp2.PoolableConnectionFactory;
-import org.apache.tomcat.dbcp.dbcp2.PoolingConnection;
+import org.apache.tomcat.dbcp.dbcp2.*;
 import org.apache.tomcat.dbcp.pool2.KeyedObjectPool;
 import org.apache.tomcat.dbcp.pool2.PooledObject;
 import org.apache.tomcat.dbcp.pool2.impl.DefaultPooledObject;
 import org.apache.tomcat.dbcp.pool2.impl.GenericKeyedObjectPool;
 import org.apache.tomcat.dbcp.pool2.impl.GenericKeyedObjectPoolConfig;
+
+import javax.management.ObjectName;
+import java.sql.Connection;
 
 /**
  * A {@link PoolableConnectionFactory} that creates {@link PoolableManagedConnection}s.
@@ -40,16 +34,16 @@ import org.apache.tomcat.dbcp.pool2.impl.GenericKeyedObjectPoolConfig;
  */
 public class PoolableManagedConnectionFactory extends PoolableConnectionFactory {
 
-    /** Transaction registry associated with connections created by this factory */
+    /**
+     * Transaction registry associated with connections created by this factory
+     */
     private final TransactionRegistry transactionRegistry;
 
     /**
      * Creates a PoolableManagedConnectionFactory and attach it to a connection pool.
      *
-     * @param connFactory
-     *            XAConnectionFactory
-     * @param dataSourceJmxName
-     *            The data source name.
+     * @param connFactory       XAConnectionFactory
+     * @param dataSourceJmxName The data source name.
      */
     public PoolableManagedConnectionFactory(final XAConnectionFactory connFactory, final ObjectName dataSourceJmxName) {
         super(connFactory, dataSourceJmxName);

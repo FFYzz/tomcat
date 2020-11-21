@@ -16,15 +16,15 @@
  */
 package org.apache.tomcat.util.buf;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.ByteBuffer;
-
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.compat.JreCompat;
 import org.apache.tomcat.util.res.StringManager;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
 
 public class ByteBufferUtils {
 
@@ -87,11 +87,11 @@ public class ByteBufferUtils {
      * Buffers are assumed to be in 'write to' mode since there would be no need
      * to expand a buffer while it was in 'read from' mode.
      *
-     * @param in        Buffer to expand
-     * @param newSize   The size t which the buffer should be expanded
-     * @return          The expanded buffer with any data from the input buffer
-     *                  copied in to it or the original buffer if there was no
-     *                  need for expansion
+     * @param in      Buffer to expand
+     * @param newSize The size t which the buffer should be expanded
+     * @return The expanded buffer with any data from the input buffer
+     * copied in to it or the original buffer if there was no
+     * need for expansion
      */
     public static ByteBuffer expand(ByteBuffer in, int newSize) {
         if (in.capacity() >= newSize) {

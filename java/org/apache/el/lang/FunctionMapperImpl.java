@@ -16,6 +16,10 @@
  */
 package org.apache.el.lang;
 
+import org.apache.el.util.MessageFactory;
+import org.apache.el.util.ReflectionUtil;
+
+import javax.el.FunctionMapper;
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -23,11 +27,6 @@ import java.io.ObjectOutput;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import javax.el.FunctionMapper;
-
-import org.apache.el.util.MessageFactory;
-import org.apache.el.util.ReflectionUtil;
 
 
 /**
@@ -125,14 +124,14 @@ public class FunctionMapperImpl extends FunctionMapper implements
             // make sure m isn't null
             getMethod();
             out.writeUTF((this.owner != null) ?
-                     this.owner :
-                     this.m.getDeclaringClass().getName());
+                    this.owner :
+                    this.m.getDeclaringClass().getName());
             out.writeUTF((this.name != null) ?
-                     this.name :
-                     this.m.getName());
+                    this.name :
+                    this.m.getName());
             out.writeObject((this.types != null) ?
-                     this.types :
-                     ReflectionUtil.toTypeNameArray(this.m.getParameterTypes()));
+                    this.types :
+                    ReflectionUtil.toTypeNameArray(this.m.getParameterTypes()));
 
         }
 

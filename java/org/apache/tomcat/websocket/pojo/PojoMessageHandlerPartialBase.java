@@ -16,21 +16,20 @@
  */
 package org.apache.tomcat.websocket.pojo;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.ByteBuffer;
+import org.apache.tomcat.websocket.WsSession;
 
 import javax.websocket.DecodeException;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
-
-import org.apache.tomcat.websocket.WsSession;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
 
 /**
  * Common implementation code for the POJO partial message handlers. All
  * the real work is done in this class and in the superclass.
  *
- * @param <T>   The type of message to handle
+ * @param <T> The type of message to handle
  */
 public abstract class PojoMessageHandlerPartialBase<T>
         extends PojoMessageHandlerBase<T> implements MessageHandler.Partial<T> {
@@ -38,9 +37,9 @@ public abstract class PojoMessageHandlerPartialBase<T>
     private final int indexBoolean;
 
     public PojoMessageHandlerPartialBase(Object pojo, Method method,
-            Session session, Object[] params, int indexPayload,
-            boolean convert, int indexBoolean, int indexSession,
-            long maxMessageSize) {
+                                         Session session, Object[] params, int indexPayload,
+                                         boolean convert, int indexBoolean, int indexSession,
+                                         long maxMessageSize) {
         super(pojo, method, session, params, indexPayload, convert,
                 indexSession, maxMessageSize);
         this.indexBoolean = indexBoolean;

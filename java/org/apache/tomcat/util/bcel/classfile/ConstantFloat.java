@@ -17,16 +17,16 @@
  */
 package org.apache.tomcat.util.bcel.classfile;
 
+import org.apache.tomcat.util.bcel.Const;
+
 import java.io.DataInput;
 import java.io.IOException;
-
-import org.apache.tomcat.util.bcel.Const;
 
 /**
  * This class is derived from the abstract {@link Constant}
  * and represents a reference to a float object.
  *
- * @see     Constant
+ * @see Constant
  */
 public final class ConstantFloat extends Constant {
 

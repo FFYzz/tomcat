@@ -17,19 +17,6 @@
 
 package org.apache.jasper.compiler;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.Set;
-import java.util.Vector;
-
-import javax.servlet.ServletContext;
-import javax.servlet.jsp.tagext.FunctionInfo;
-import javax.servlet.jsp.tagext.TagFileInfo;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
-
 import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
 import org.apache.jasper.JspCompilationContext;
@@ -38,6 +25,18 @@ import org.apache.tomcat.util.descriptor.tld.TaglibXml;
 import org.apache.tomcat.util.descriptor.tld.TldParser;
 import org.apache.tomcat.util.descriptor.tld.TldResourcePath;
 import org.xml.sax.SAXException;
+
+import javax.servlet.ServletContext;
+import javax.servlet.jsp.tagext.FunctionInfo;
+import javax.servlet.jsp.tagext.TagFileInfo;
+import javax.servlet.jsp.tagext.TagInfo;
+import javax.servlet.jsp.tagext.TagLibraryInfo;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * Class responsible for generating an implicit tag library containing tag
@@ -57,7 +56,7 @@ class ImplicitTagLibraryInfo extends TagLibraryInfo {
     private static final String IMPLICIT_TLD = "implicit.tld";
 
     // Maps tag names to tag file paths
-    private final Hashtable<String,String> tagFileMap;
+    private final Hashtable<String, String> tagFileMap;
 
     private final ParserController pc;
     private final PageInfo pi;
@@ -65,11 +64,11 @@ class ImplicitTagLibraryInfo extends TagLibraryInfo {
 
 
     public ImplicitTagLibraryInfo(JspCompilationContext ctxt,
-            ParserController pc,
-            PageInfo pi,
-            String prefix,
-            String tagdir,
-            ErrorDispatcher err) throws JasperException {
+                                  ParserController pc,
+                                  PageInfo pi,
+                                  String prefix,
+                                  String tagdir,
+                                  ErrorDispatcher err) throws JasperException {
         super(prefix, null);
         this.pc = pc;
         this.pi = pi;
@@ -89,7 +88,7 @@ class ImplicitTagLibraryInfo extends TagLibraryInfo {
         // Determine the value of the <short-name> subelement of the
         // "imaginary" <taglib> element
         if (tagdir.equals(WEB_INF_TAGS)
-                || tagdir.equals( WEB_INF_TAGS + "/")) {
+                || tagdir.equals(WEB_INF_TAGS + "/")) {
             shortname = TAGS_SHORTNAME;
         } else {
             shortname = tagdir.substring(WEB_INF_TAGS.length());

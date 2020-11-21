@@ -17,17 +17,16 @@
 
 package org.apache.jasper.compiler;
 
+import org.apache.jasper.JasperException;
+
+import javax.servlet.jsp.tagext.FunctionInfo;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.jsp.tagext.FunctionInfo;
-
-import org.apache.jasper.JasperException;
-
 /**
  * This class defines internal representation for an EL Expression
- *
+ * <p>
  * It currently only defines functions.  It can be expanded to define
  * all the components of an EL expression, if need to.
  *
@@ -49,7 +48,7 @@ abstract class ELNode {
 
         Root(ELNode.Nodes expr, char type) {
             this.expr = expr;
-        this.type = type;
+            this.type = type;
         }
 
         @Override
@@ -203,7 +202,6 @@ abstract class ELNode {
          * Visit the nodes in the list with the supplied visitor.
          *
          * @param v The visitor used
-         *
          * @throws JasperException if an error occurs while visiting a node
          */
         public void visit(Visitor v) throws JasperException {

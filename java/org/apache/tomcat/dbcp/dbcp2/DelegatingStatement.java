@@ -16,11 +16,7 @@
  */
 package org.apache.tomcat.dbcp.dbcp2;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,10 +33,14 @@ import java.util.List;
  */
 public class DelegatingStatement extends AbandonedTrace implements Statement {
 
-    /** My delegate. */
+    /**
+     * My delegate.
+     */
     private Statement statement;
 
-    /** The connection that created me. **/
+    /**
+     * The connection that created me.
+     **/
     private DelegatingConnection<?> connection;
 
     private boolean closed = false;
@@ -49,10 +49,8 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      * Create a wrapper for the Statement which traces this Statement to the Connection which created it and the code
      * which created it.
      *
-     * @param statement
-     *            the {@link Statement} to delegate all calls to.
-     * @param connection
-     *            the {@link DelegatingConnection} that created this statement.
+     * @param statement  the {@link Statement} to delegate all calls to.
+     * @param connection the {@link DelegatingConnection} that created this statement.
      */
     public DelegatingStatement(final DelegatingConnection<?> connection, final Statement statement) {
         super(connection);
@@ -61,9 +59,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     /**
-     *
-     * @throws SQLException
-     *             thrown by the delegating statement.
+     * @throws SQLException thrown by the delegating statement.
      * @since 2.4.0 made public, was protected in 2.3.0.
      */
     public void activate() throws SQLException {
@@ -461,7 +457,6 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
      * </p>
      *
      * @return The innermost delegate.
-     *
      * @see #getDelegate
      */
     public Statement getInnermostDelegate() {
@@ -678,9 +673,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     }
 
     /**
-     *
-     * @throws SQLException
-     *             thrown by the delegating statement.
+     * @throws SQLException thrown by the delegating statement.
      * @since 2.4.0 made public, was protected in 2.3.0.
      */
     public void passivate() throws SQLException {
@@ -706,8 +699,7 @@ public class DelegatingStatement extends AbandonedTrace implements Statement {
     /**
      * Sets my delegate.
      *
-     * @param statement
-     *            my delegate.
+     * @param statement my delegate.
      */
     public void setDelegate(final Statement statement) {
         this.statement = statement;

@@ -16,10 +16,6 @@
  */
 package org.apache.tomcat.util.descriptor.tld;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.AccessController;
-
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.descriptor.Constants;
@@ -32,6 +28,10 @@ import org.apache.tomcat.util.security.PrivilegedSetTccl;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.AccessController;
+
 /**
  * Parses a Tag Library Descriptor.
  */
@@ -40,12 +40,12 @@ public class TldParser {
     private final Digester digester;
 
     public TldParser(boolean namespaceAware, boolean validation,
-            boolean blockExternal) {
+                     boolean blockExternal) {
         this(namespaceAware, validation, new TldRuleSet(), blockExternal);
     }
 
     public TldParser(boolean namespaceAware, boolean validation, RuleSet ruleSet,
-            boolean blockExternal) {
+                     boolean blockExternal) {
         digester = DigesterFactory.newDigester(
                 validation, namespaceAware, ruleSet, blockExternal);
     }

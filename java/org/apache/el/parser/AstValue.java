@@ -18,22 +18,16 @@
 
 package org.apache.el.parser;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import javax.el.ELException;
-import javax.el.ELResolver;
-import javax.el.LambdaExpression;
-import javax.el.MethodInfo;
-import javax.el.PropertyNotFoundException;
-import javax.el.ValueReference;
-
 import org.apache.el.lang.ELSupport;
 import org.apache.el.lang.EvaluationContext;
 import org.apache.el.stream.Optional;
 import org.apache.el.util.MessageFactory;
 import org.apache.el.util.ReflectionUtil;
+
+import javax.el.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 
 /**
@@ -142,9 +136,9 @@ public final class AstValue extends SimpleNode {
         while (base != null && i < propCount) {
             suffix = this.children[i].getValue(ctx);
             if (i + 1 < propCount &&
-                    (this.children[i+1] instanceof AstMethodParameters)) {
+                    (this.children[i + 1] instanceof AstMethodParameters)) {
                 AstMethodParameters mps =
-                    (AstMethodParameters) this.children[i+1];
+                        (AstMethodParameters) this.children[i + 1];
                 if (base instanceof Optional && "orElseGet".equals(suffix) &&
                         mps.jjtGetNumChildren() == 1) {
                     Node paramFoOptional = mps.jjtGetChild(0);
@@ -158,7 +152,7 @@ public final class AstValue extends SimpleNode {
                 Object[] paramValues = mps.getParameters(ctx);
                 base = resolver.invoke(ctx, base, suffix,
                         getTypesFromValues(paramValues), paramValues);
-                i+=2;
+                i += 2;
             } else {
                 // This is a property
                 if (suffix == null) {
@@ -182,7 +176,7 @@ public final class AstValue extends SimpleNode {
         Target t = getTarget(ctx);
         ctx.setPropertyResolved(false);
         boolean result =
-            ctx.getELResolver().isReadOnly(ctx, t.base, t.property);
+                ctx.getELResolver().isReadOnly(ctx, t.base, t.property);
         if (!ctx.isPropertyResolved()) {
             throw new PropertyNotFoundException(MessageFactory.get(
                     "error.resolver.unhandled", t.base, t.property));
@@ -210,7 +204,7 @@ public final class AstValue extends SimpleNode {
     @Override
     // Interface el.parser.Node uses raw types (and is auto-generated)
     public MethodInfo getMethodInfo(EvaluationContext ctx,
-            @SuppressWarnings("rawtypes") Class[] paramTypes)
+                                    @SuppressWarnings("rawtypes") Class[] paramTypes)
             throws ELException {
         Target t = getTarget(ctx);
         Method m = ReflectionUtil.getMethod(
@@ -222,8 +216,8 @@ public final class AstValue extends SimpleNode {
     @Override
     // Interface el.parser.Node uses a raw type (and is auto-generated)
     public Object invoke(EvaluationContext ctx,
-            @SuppressWarnings("rawtypes") Class[] paramTypes,
-            Object[] paramValues) throws ELException {
+                         @SuppressWarnings("rawtypes") Class[] paramTypes,
+                         Object[] paramValues) throws ELException {
 
         Target t = getTarget(ctx);
         Method m = null;
@@ -306,7 +300,7 @@ public final class AstValue extends SimpleNode {
             Class<?> varArgType = m.getParameterTypes()[paramCount - 1].getComponentType();
             Object[] varArgs =
                     (Object[]) Array.newInstance(varArgType, src.length - (paramCount - 1));
-            for (int i = 0; i < src.length - (paramCount - 1); i ++) {
+            for (int i = 0; i < src.length - (paramCount - 1); i++) {
                 varArgs[i] = ELSupport.coerceToType(ctx, src[paramCount - 1 + i], varArgType);
             }
             dest[paramCount - 1] = varArgs;

@@ -16,10 +16,10 @@
  */
 package org.apache.jasper.runtime;
 
-import javax.servlet.ServletConfig;
-
 import org.apache.jasper.compiler.Localizer;
 import org.apache.tomcat.InstanceManager;
+
+import javax.servlet.ServletConfig;
 
 public class InstanceManagerFactory {
 

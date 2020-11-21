@@ -39,6 +39,9 @@ import java.util.Set;
 public interface Pipeline extends Contained {
 
     /**
+     * basicValue 是 Value 链表的末端
+     * 负责调用下层容器的第一个 Value
+     *
      * @return the Valve instance that has been distinguished as the basic
      * Valve for this Pipeline (if any).
      */
